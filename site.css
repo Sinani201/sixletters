@@ -1,0 +1,64 @@
+#finished-words {
+	float: left;
+}
+
+.word {
+	font-size: smaller;
+	font-weight: bold;
+}
+
+.word td {
+	border: 1px solid silver;
+	width: 1em;
+	height: 1.23em;
+	text-align: center;
+}
+
+.word-group {
+	margin: 0 auto 11px;
+	overflow: hidden;
+}
+
+.word-column {
+	float: left;
+	margin-right: 6px;
+	margin-bottom: auto;
+}
+
+#game {
+	float: left;
+	padding: 7em 4em;
+	font-size: x-large;
+}
+
+#letter-slots {
+	overflow: hidden;
+}
+
+.slot {
+	border: 1px solid;
+	margin-right: 0.8em;
+	width: 2em;
+	height: 2em;
+	line-height: 2em;
+	text-align: center;
+	vertical-align: middle;
+	float: left;
+}
+
+#letters {
+	overflow: hidden;
+	margin-top: 1em;
+}
+
+.letter {
+	border: 1px solid;
+	border-radius: 100%;
+	width: 2em;
+	height: 2em;
+	line-height: 2em;
+	text-align: center;
+	vertical-align: middle;
+	float: left;
+	margin-right: 0.8em;
+}
