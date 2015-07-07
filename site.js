@@ -59,7 +59,7 @@ function generateGame(words) {
 	//baseWord = "tuxedo";
 	//baseWord = "mallet"; // 39:08
 	//baseWord = "gazebo";
-	baseWord = "chosen";
+	//baseWord = "chosen";
 
 	baseWord = baseWord.split('');
 
