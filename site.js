@@ -251,6 +251,31 @@ function submitWord() {
 	}
 }
 
+function shuffleLetters() {
+	var div_letters = document.getElementById("letters");
+
+	var letters = [];
+	for (var i = 0; i < div_letters.children.length; i++) {
+		if (div_letters.children[i].childNodes.length) {
+			letters.push(div_letters.children[i].childNodes[0].textContent);
+		} else {
+			letters.push("");
+		}
+	}
+
+	shuffle(letters);
+
+	for (var i = 0; i < div_letters.children.length; i++) {
+		if (div_letters.children[i].childNodes.length) {
+			div_letters.children[i].removeChild(div_letters.children[i].firstChild);
+		}
+		
+		if (letters[i]) {
+			div_letters.children[i].appendChild(document.createTextNode(letters[i]));
+		}
+	}
+}
+
 window.onload = function() {
 	var getWords = new XMLHttpRequest();
 	getWords.onload = function() {
@@ -261,6 +286,12 @@ window.onload = function() {
 	getWords.responseType = "text";
 	getWords.open("get", "words.txt", true);
 	getWords.send();
+
+	document.getElementById("b-shuffle").onclick = shuffleLetters;
+	document.getElementById("b-enter").onclick = submitWord;
+	document.getElementById("b-clear").onclick = function() {
+		while(backspaceChar());
+	};
 
 	window.addEventListener("keydown",  function(e) {
 		var key = e.keyCode || e.which;
