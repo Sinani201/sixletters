@@ -184,9 +184,7 @@ function enterChar(index) {
 function backspaceChar() {
 	var div_letters = document.getElementById("letters");
 	var div_slots = document.getElementById("letter-slots");
-	if (div_slots.children.length === 0) {
-		return 0;
-	}
+
 	for (var i = div_slots.children.length - 1; i >= 0; i--) {
 		if (div_slots.children[i].childNodes.length) {
 			var div_backspaced = div_slots.children[i];
@@ -201,7 +199,7 @@ function backspaceChar() {
 		}
 	}
 
-	return i !== 0;
+	return i > 0;
 }
 
 // reveals the word to the player by modifying the DOM
