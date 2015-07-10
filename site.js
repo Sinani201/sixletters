@@ -300,6 +300,7 @@ window.onload = function() {
 		var letters = div_letters.children;
 		console.log(key+" "+keychar);
 		if (key === 8) { // backspace
+			e.preventDefault();
 			backspaceChar();
 		} else if (key === 13) { // enter
 			submitWord();
