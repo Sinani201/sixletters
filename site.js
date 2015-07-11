@@ -340,6 +340,7 @@ window.onload = function() {
 		} else {
 			for (var i = 0; i < letters.length; i++) {
 				if (letters[i].childNodes.length && letters[i].childNodes[0].textContent.toLowerCase() === keychar.toLowerCase()) {
+					document.activeElement.blur();
 					enterChar(i);
 					break;
 				}
