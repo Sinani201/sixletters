@@ -117,6 +117,20 @@ function constructGame(game) {
 					tr.appendChild(td);
 				}
 
+				tr.onclick = function() {
+					var word = "";
+					for (var m = 0; m < this.children.length; m++) {
+						var c = this.children[m].childNodes;
+						if (c.length) {
+							word = word + c[0].textContent;
+						} else {
+							return;
+						}
+					}
+
+					window.open("http://ninjawords.com/"+word.toLowerCase(), '_blank');
+				};
+
 				table_word.appendChild(tr);
 
 				div_column.appendChild(table_word);
@@ -235,6 +249,8 @@ function revealWord(group, index) {
 		tr.children[i].appendChild(document.createTextNode(
 				answers[group][index][0][i].toUpperCase()));
 	}
+
+	tr.style.cursor = "pointer";
 
 	answers[group][index][1] = true;
 }
