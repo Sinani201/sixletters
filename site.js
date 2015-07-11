@@ -143,6 +143,13 @@ function constructGame(game) {
 		var div_letter = document.createElement("div");
 		div_letter.className = "letter";
 		div_letter.appendChild(document.createTextNode(starting_letters[i].toUpperCase()));
+
+		// if we click on this div, make it enter a char.
+		// has to go in a function closure so the i variable
+		// keeps its value for each individual div
+		(function(a) {
+			div_letter.onclick = function() { enterChar(a); };
+		})(i);
 		div_letters.appendChild(div_letter);
 	}
 }
@@ -167,11 +174,14 @@ function enterChar(index) {
 	var div_chosenLetter = div_letters.children[index];
 	var div_slots = document.getElementById("letter-slots");
 
-	for (var i = 0; i < div_slots.children.length; i++) {
-		if (!div_slots.children[i].childNodes.length) {
-			div_slots.children[i].appendChild(document.createTextNode(div_chosenLetter.childNodes[0].textContent));
-			div_chosenLetter.removeChild(div_chosenLetter.firstChild);
-			break;
+	if (div_chosenLetter.childNodes.length) {
+		for (var i = 0; i < div_slots.children.length; i++) {
+			if (!div_slots.children[i].childNodes.length) {
+				div_slots.children[i].appendChild(
+						document.createTextNode(div_chosenLetter.childNodes[0].textContent));
+				div_chosenLetter.removeChild(div_chosenLetter.firstChild);
+				break;
+			}
 		}
 	}
 }
@@ -186,7 +196,8 @@ function backspaceChar() {
 			var div_backspaced = div_slots.children[i];
 			for (var j = div_letters.children.length - 1; j >= 0; j--) {
 				if (!div_letters.children[j].childNodes.length) {
-					div_letters.children[j].appendChild(document.createTextNode(div_backspaced.childNodes[0].textContent));
+					div_letters.children[j].appendChild(
+							document.createTextNode(div_backspaced.childNodes[0].textContent));
 					break;
 				}
 			}
@@ -213,7 +224,8 @@ function revealWord(group, index) {
 	var tr = table_word.children[0];
 
 	for (var i = 0; i < tr.children.length; i++) {
-		tr.children[i].appendChild(document.createTextNode(answers[group][index][0][i].toUpperCase()));
+		tr.children[i].appendChild(document.createTextNode(
+				answers[group][index][0][i].toUpperCase()));
 	}
 
 	answers[group][index][1] = true;
