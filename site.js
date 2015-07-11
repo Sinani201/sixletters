@@ -67,7 +67,6 @@ function generateGame(words) {
 	for (var i = 3; i <= 6; i++) {
 		var ss = getUniqPermutations(baseWord, i).map(function(a) { return a.join(""); }).filter( function(s) { return words.indexOf(s) > -1 }).sort();
 
-		//output.push.apply(output, ss);
 		output.push(ss);
 	}
 
@@ -95,8 +94,6 @@ function constructGame(game) {
 		word_amounts[current_group][1] += 1;
 	}
 
-	console.log(game);
-	console.log(word_amounts);
 	var div_finished_words = document.getElementById("finished-words");
 	for (var i = 0; i < game.length; i++) {
 		var div_group = document.createElement("div");
@@ -133,7 +130,6 @@ function constructGame(game) {
 	}
 
 	var starting_letters = shuffle(game[game.length-1][0].split(''));
-	console.log(starting_letters);
 	var div_letter_slots = document.getElementById("letter-slots");
 	var div_letters = document.getElementById("letters");
 	for (var i = 0; i < starting_letters.length; i++) {
@@ -299,7 +295,7 @@ window.onload = function() {
 		var keychar = String.fromCharCode(key);
 		var div_letters = document.getElementById("letters");
 		var letters = div_letters.children;
-		console.log(key+" "+keychar);
+
 		if (key === 8) { // backspace
 			e.preventDefault();
 			backspaceChar();
