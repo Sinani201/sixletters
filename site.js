@@ -136,7 +136,15 @@ function constructGame(game) {
 		// add the empty slots
 		var div_slot = document.createElement("div");
 		div_slot.className = "slot";
-		//div_slot.appendChild(document.createTextNode("A"));
+
+		// if we click on the last slot that contains a letter, backspace it.
+		div_slot.onclick = function() {
+			var sib = this.nextElementSibling;
+			if (!(sib && sib.childNodes.length)) {
+				backspaceChar();
+			}
+		}
+
 		div_letter_slots.appendChild(div_slot);
 
 		// add the actual letters
