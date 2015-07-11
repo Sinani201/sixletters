@@ -233,26 +233,36 @@ function backspaceChar() {
 
 // reveals the word to the player by modifying the DOM
 function revealWord(group, index) {
-	var div_group = document.getElementById("finished-words").children[group];
+	if (!answers[group][index][1]) {
+		var div_group = document.getElementById("finished-words").children[group];
 
-	var table_word;
-	var column1_length = div_group.children[0].children.length;
-	if (index < column1_length) {
-		table_word = div_group.children[0].children[index];
-	} else {
-		table_word = div_group.children[1].children[index - column1_length];
+		var table_word;
+		var column1_length = div_group.children[0].children.length;
+		if (index < column1_length) {
+			table_word = div_group.children[0].children[index];
+		} else {
+			table_word = div_group.children[1].children[index - column1_length];
+		}
+
+		var tr = table_word.children[0];
+
+		for (var i = 0; i < tr.children.length; i++) {
+			tr.children[i].appendChild(document.createTextNode(
+					answers[group][index][0][i].toUpperCase()));
+		}
+
+		tr.style.cursor = "pointer";
+
+		answers[group][index][1] = true;
 	}
+}
 
-	var tr = table_word.children[0];
-
-	for (var i = 0; i < tr.children.length; i++) {
-		tr.children[i].appendChild(document.createTextNode(
-				answers[group][index][0][i].toUpperCase()));
+function revealAll() {
+	for (var i = 0; i < answers.length; i++) {
+		for (var j = 0; j < answers[i].length; j++) {
+			revealWord(i, j);
+		}
 	}
-
-	tr.style.cursor = "pointer";
-
-	answers[group][index][1] = true;
 }
 
 // if word is correct, returns a triple [a, b, c] where
@@ -275,8 +285,8 @@ function submitWord() {
 	var word = getEnteredWord().toLowerCase();
 	while(backspaceChar());
 
-	var a;
-	if (a = checkWord(word)) {
+	var a = checkWord(word);
+	if (a) {
 		if (a[2]) {
 		} else {
 			revealWord(a[0], a[1]);
@@ -325,6 +335,7 @@ window.onload = function() {
 	document.getElementById("b-clear").onclick = function() {
 		while(backspaceChar());
 	};
+	document.getElementById("b-giveup").onclick = revealAll;
 
 	window.addEventListener("keydown",  function(e) {
 		var key = e.keyCode || e.which;
