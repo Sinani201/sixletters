@@ -27,7 +27,7 @@
 
 #game {
 	float: left;
-	padding: 7em 4em;
+	padding: 3em 4em;
 	font-size: x-large;
 }
 
@@ -64,4 +64,57 @@
 	float: left;
 	margin-right: 0.8em;
 	cursor: pointer;
+}
+
+#multiplayer {
+	font-size: medium;
+	margin-top: 1em;
+}
+
+#input-name {
+	width: 10em;
+}
+
+#sharebutton {
+	display: none;
+}
+
+#entername {
+	display: none;
+}
+
+#gameinfo {
+	display: none;
+}
+
+#gameinfo-inner {
+	margin-top: 0.8em;
+}
+
+#playerlist {
+	width: 12em;
+	float: left;
+}
+
+#playerlist h3 {
+	font-size: 1.3em;
+	margin: 0;
+}
+
+#playerul {
+	padding-left: 0.8em;
+	margin-top: 0.8em;
+}
+
+#playerul li {
+	list-style-type: none;
+}
+
+#log {
+	margin-top: 0.6em;
+	margin-left: 12em;
+	width: 20em;
+	height: 10em;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }

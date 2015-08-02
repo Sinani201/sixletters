@@ -9,6 +9,16 @@ function shuffle(array) {
     return array;
 }
 
+function split(s, separator, limit) {
+  // split the initial string using limit
+  var arr = s.split(separator, limit);
+  // get the rest of the string...
+  var left = s.substring(arr.join(separator).length + separator.length);
+  // and append it to the array
+  arr.push(left);
+  return arr;
+}
+
 function permute(input) {
     var permArr = [],
         usedChars = [];
@@ -50,6 +60,10 @@ function getUniqPermutations(list, maxLen) {
 // the boolean is true if that word has been found by the player
 var answers = [];
 
+// if the game is in multiplayer mode, this should be the socket
+var mp_sock = null;
+var mp_player_name = null;
+
 // takes an array of all words that have between 3-6 chars
 // and returns a list of words for the game
 function generateGame(words) {
@@ -76,6 +90,7 @@ function generateGame(words) {
 // takes a list of words for a game (should already be sorted)
 // and modifies the DOM with it
 function constructGame(game) {
+	console.log(game);
 	// first decide how the columns will be divied up
 	var max_rows = 20;
 	var word_amounts = game.map(function(a) { return [a.length, 0] });
@@ -141,6 +156,8 @@ function constructGame(game) {
 		}
 
 		div_finished_words.appendChild(div_group);
+
+		answers = game.map(function(a) { return a.map(function(b) { return [b, false]; }); });
 	}
 
 	var starting_letters = shuffle(game[game.length-1][0].split(''));
@@ -232,7 +249,7 @@ function backspaceChar() {
 }
 
 // reveals the word to the player by modifying the DOM
-function revealWord(group, index) {
+function revealWord(group, index, name) {
 	if (!answers[group][index][1]) {
 		var div_group = document.getElementById("finished-words").children[group];
 
@@ -253,7 +270,8 @@ function revealWord(group, index) {
 
 		tr.style.cursor = "pointer";
 
-		answers[group][index][1] = true;
+		if (typeof(name) === "undefined") name = true;
+		answers[group][index][1] = name;
 	}
 }
 
@@ -281,9 +299,9 @@ function checkWord(word) {
 	return null;
 }
 
-function submitWord() {
-	var word = getEnteredWord().toLowerCase();
-	while(backspaceChar());
+// reveals this word under `name`, if it is correct
+function submitWord(word, name) {
+	word = word.toLowerCase();
 
 	var a = checkWord(word);
 	if (a) {
@@ -292,6 +310,20 @@ function submitWord() {
 			revealWord(a[0], a[1]);
 		}
 	}
+}
+
+// should be called when the local player submits a word (presses enter)
+// if the user is in a multiplayer game, this will annouce to the server
+// that this word has been attempted
+function selfSubmitWord() {
+	var word = getEnteredWord().toLowerCase();
+	while(backspaceChar());
+	submitWord(word);
+	mp_sock.send(":attempt "+word);
+}
+
+function mp_other_attempt(word, player) {
+	submitWord(word, player);
 }
 
 function shuffleLetters() {
@@ -319,45 +351,232 @@ function shuffleLetters() {
 	}
 }
 
-window.onload = function() {
-	var getWords = new XMLHttpRequest();
-	getWords.onload = function() {
-		var answerWords = generateGame(this.responseText.split("\n"));
-		constructGame(answerWords);
-		answers = answerWords.map(function(a) { return a.map(function(b) { return [b, false]; }); });
+function common_onmsg(event) {
+	console.log(">"+event.data);
+	var attempt_command = ":attempt ";
+	if (event.data.substring(0, attempt_command.length) === attempt_command) {
+		sdata = split(event.data, " ", 2);
+		mp_other_attempt(sdata[1], sdata[2]);
+	} else {
+		var sdata = split(event.data, " ", 1);
+		if (sdata[0] === ":join") {
+			onPlayerJoin(sdata[1]);
+		}
+	}
+}
+
+// creates the websocket connection that hosts the game
+// name should be the name of this player
+// callback should be the function to call once the server gives us the game id.
+// it will be called with that game id as a parameter
+function host_game(name, callback) {
+	var sock = new WebSocket("ws://127.0.0.1/");
+
+	sock.onopen = function (event) {
+		sock.send(":host "+name);
+		
+		console.log(answers.length);
+		for (var i = 0; i < answers.length; i++) {
+			for (var j = 0; j < answers[i].length; j++) {
+				sock.send(answers[i][j][0]+(answers[i][j][1] ? " y" : " n"));
+			}
+		}
+
+		sock.send(":endwords");
 	};
-	getWords.responseType = "text";
-	getWords.open("get", "words.txt", true);
-	getWords.send();
+
+	sock.onmessage = function (event) {
+		// TODO: if the socket is cloesd, do something
+		callback(event.data);
+		onPlayerJoin(name);
+		mp_player_name = name;
+		mp_sock = sock;
+		sock.onmessage = common_onmsg;
+	};
+}
+
+function mp_sendname(name) {
+	mp_player_name = name;
+	mp_sock.send(name);
+}
+
+function join_game(gamename) {
+	var sock = new WebSocket("ws://127.0.0.1/");
+	
+	var state = 0;
+	var sent_words = [];
+
+	sock.onopen = function (event) {
+		sock.send(":join "+gamename);
+	};
+
+	sock.onmessage = function (event) {
+		if (state === 0) {
+			if (event.data == ":nolobby") {
+				// TODO: display this error to the user
+				console.log("error: no lobby of that name");
+			} else {
+				state = 1;
+			}
+		}
+		if (state === 1) {
+			sdata = split(event.data, " ", 1);
+			if (sdata[0] === ":player") {
+				onPlayerJoin(sdata[1]);
+			} else if (sdata[0] === ":endplayers") {
+				state = 2;
+				mp_sock = sock;
+				show_mp_menu(1);
+			}
+		} else if (state === 2) {
+			if (event.data === ":badname") {
+				// TODO: display this error to the user
+				console.log("error: bad name");
+			} else {
+				onPlayerJoin(mp_player_name);
+				state = 3;
+			}
+		}
+		if (state === 3) {
+			word = event.data.split(" ", 1)[0];
+			if (word !== ":endwords") {
+				sent_words.push(word);
+			} else {
+				constructGame(generateGame(sent_words));
+				mp_sock = sock;
+				sock.onmessage = common_onmsg;
+				show_mp_menu(2);
+			}
+		}
+	};
+}
+
+// appends this element to the log
+function logmsg(element) {
+	element.classList.add("logmsg");
+	document.getElementById("log").appendChild(element);
+}
+
+function onPlayerJoin(newplayer) {
+	// create the log message
+	var d = document.createElement("div");
+	var span_pname = document.createElement("span");
+	span_pname.className = "playername";
+	span_pname.appendChild(document.createTextNode(newplayer));
+	d.appendChild(span_pname);
+	d.appendChild(document.createTextNode(" has joined the game."));
+
+	logmsg(d);
+
+	// add this player to the list of players
+	var li = document.createElement("li");
+	var span_pname = document.createElement("span");
+	span_pname.className = "playername";
+	span_pname.appendChild(document.createTextNode(newplayer));
+	li.appendChild(span_pname);
+
+	var ul_playerul = document.getElementById("playerul");
+	ul_playerul.appendChild(li);
+}
+
+// show the user this game's unique URL
+function display_gamename(gamename) {
+	document.getElementById("input-sharelink").value = document.URL+"#"+gamename;
+}
+
+// show a different stage of multiplayer game
+// 0: default (just the share button)
+// 1: enter name box
+// 2: gameinfo box
+function show_mp_menu(n) {
+	var stages = [
+		document.getElementById("sharebutton"),
+		document.getElementById("entername"),
+		document.getElementById("gameinfo")
+	];
+	for (var i = 0; i < stages.length; i++) {
+		if (i === n) {
+			stages[i].style.display = "block";
+		} else {
+			stages[i].style.display = "none";
+		}
+	}
+}
+
+window.onload = function() {
+	var hash = window.location.hash.substr(1);
+	if (hash) {
+		console.log("joining multiplayer game "+hash);
+		join_game(hash);
+	} else {
+		console.log("starting new offline game");
+		var getWords = new XMLHttpRequest();
+		getWords.onload = function() {
+			show_mp_menu(0);
+			var answerWords = generateGame(this.responseText.split("\n"));
+			constructGame(answerWords);
+		};
+		getWords.responseType = "text";
+		getWords.open("get", "words.txt", true);
+		getWords.send();
+	}
 
 	document.getElementById("b-shuffle").onclick = shuffleLetters;
-	document.getElementById("b-enter").onclick = submitWord;
+	document.getElementById("b-enter").onclick = selfSubmitWord;
 	document.getElementById("b-clear").onclick = function() {
 		while(backspaceChar());
 	};
 	document.getElementById("b-giveup").onclick = revealAll;
 
-	window.addEventListener("keydown",  function(e) {
-		var key = e.keyCode || e.which;
-		var keychar = String.fromCharCode(key);
-		var div_letters = document.getElementById("letters");
-		var letters = div_letters.children;
+	//document.getElementById("b-host").onclick = host_game;
+	document.getElementById("b-host").onclick = function() {
+		show_mp_menu(1);
+	};
 
-		if (key === 8) { // backspace
-			e.preventDefault();
-			backspaceChar();
-		} else if (key === 13) { // enter
-			submitWord();
+	document.getElementById("b-cancelname").onclick = function() {
+		show_mp_menu(0);
+	};
+
+	document.getElementById("b-entername").onclick = function() {
+		var entered_name = document.getElementById("input-name").value;
+		if (hash) {
+			// we are joining a game that already exists
+			mp_sendname(entered_name);
+			display_gamename(hash);
 		} else {
-			for (var i = 0; i < letters.length; i++) {
-				if (letters[i].childNodes.length && letters[i].childNodes[0].textContent.toLowerCase() === keychar.toLowerCase()) {
-					document.activeElement.blur();
-					enterChar(i);
-					break;
+			// we are creating a new game
+			host_game(entered_name, function(lobby) {
+				show_mp_menu(2);
+				console.log("Lobby name: "+lobby);
+				display_gamename(lobby);
+			});
+		}
+	};
+
+	window.addEventListener("keydown",  function(e) {
+		// if we are in a text field, don't treat the input in a special way
+		var d = e.srcElement || e.target;
+		if (d.tagName.toUpperCase() === "INPUT" && d.type.toUpperCase() === "TEXT") {
+		} else {
+			var key = e.keyCode || e.which;
+			var keychar = String.fromCharCode(key);
+			var div_letters = document.getElementById("letters");
+			var letters = div_letters.children;
+
+			if (key === 8) { // backspace
+				e.preventDefault();
+				backspaceChar();
+			} else if (key === 13) { // enter
+				selfSubmitWord();
+			} else {
+				for (var i = 0; i < letters.length; i++) {
+					if (letters[i].childNodes.length && letters[i].childNodes[0].textContent.toLowerCase() === keychar.toLowerCase()) {
+						document.activeElement.blur();
+						enterChar(i);
+						break;
+					}
 				}
 			}
 		}
 	});
 };
-
-
