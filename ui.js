@@ -87,29 +87,12 @@ var UI = (function () {
 			var div_slot = document.createElement("div");
 			div_slot.className = "slot";
 
-			// If we click on a slot, and that slot is the last slot that
-			// contains a letter, backspace it.
-			div_slot.onclick = function() {
-				var sib = this.nextElementSibling;
-				if (!(sib && sib.childNodes.length)) {
-					m.backspaceChar();
-				}
-			}
-
 			div_letter_slots.appendChild(div_slot);
 
 			// add the letter boxes
 			var div_letter = document.createElement("div");
 			div_letter.className = "letter";
 
-			// if we click on this div, make it enter a char.
-			// has to go in a function closure so the i variable
-			// keeps its value for each individual div
-			(function(a) {
-				div_letter.onclick = function() {
-					m.enterChar(m.removeLetterAtIndex(a));
-				};
-			})(i);
 			div_letters.appendChild(div_letter);
 		}
 	}

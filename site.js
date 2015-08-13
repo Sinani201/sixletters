@@ -1,14 +1,48 @@
+/**
+ * Should be called after the game UI has been initialized.  Allows the user to
+ * click on the last input letter to backspace it, and click on available
+ * letters to input them.
+ */
+function setupMouseInput() {
+	// If the user clicks on the last slot with a letter, backsapce it.
+	var div_letter_slots_c = document.getElementById("letter-slots").children;
+	for (var i = 0; i < div_letter_slots_c.length; i++) {
+		div_letter_slots_c[i].onclick = function() {
+			var sib = this.nextElementSibling;
+			console.log(sib);
+			if (!(sib && sib.childNodes.length)) {
+				GAMESTATE.backspaceChar();
+			}
+		}
+		console.log(div_letter_slots_c[i]);
+	}
+
+	// Click on an available letter to input it.
+	var div_letters_c = document.getElementById("letters").children;
+	for (var i = 0; i < div_letters_c.length; i++) {
+		// Has to go in a function closure so the i variable keeps its value for
+		// each individual div.
+		(function(a) {
+			div_letters_c[i].onclick = function() {
+				GAMESTATE.enterChar(a);
+			};
+		})(i);
+	}
+}
+
 window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
 		console.log("joining multiplayer game "+hash);
 		GAMESTATE.joinGame(hash);
+		setupMouseInput();
 	} else {
 		console.log("starting new offline game");
 		var getWords = new XMLHttpRequest();
 		getWords.onload = function() {
 			UI.show_mp_menu(0);
 			GAMESTATE.createGame(this.responseText.split("\n"));
+			setupMouseInput();
 		};
 		getWords.responseType = "text";
 		getWords.open("get", "words.txt", true);
@@ -45,6 +79,7 @@ window.onload = function() {
 			});
 		}
 	};
+
 
 	window.addEventListener("keydown",  function(e) {
 		// if we are in a text field, don't treat the input in a special way
