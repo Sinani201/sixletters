@@ -75,6 +75,10 @@
 	width: 10em;
 }
 
+#nameerror {
+	color: red;
+}
+
 #sharebutton {
 	display: none;
 }

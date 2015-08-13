@@ -30,6 +30,25 @@ function setupMouseInput() {
 	}
 }
 
+/**
+ * Checks if a name is valid.
+ *
+ * @param name String The name to check
+ * @return String An error message detailing why this name is invalid, or null
+ *                if the name is valid.
+ */
+function validateName(name) {
+	if (name.length <= 0) {
+		return "No empty names allowed";
+	} else if (name.length > 10) {
+		return "Name may not be longer than ten characters";
+	} else if (!name.match(/^[0-9a-z]+$/)) {
+		return "Name must only use alphanumeric characters";
+	} else {
+		return null;
+	}
+}
+
 window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
@@ -66,13 +85,22 @@ window.onload = function() {
 
 	document.getElementById("b-entername").onclick = function() {
 		var entered_name = document.getElementById("input-name").value;
-		if (hash) {
-			// we are joining a game that already exists
-			GAMESTATE.sendName(entered_name);
-			UI.display_gamename(hash);
+		var nameError = validateName(entered_name);
+		if (nameError) {
+			var span_error = document.getElementById("nameerror");
+			if (span_error.childNodes.length) {
+				span_error.removeChild(span_error.firstChild);
+			}
+			span_error.appendChild(document.createTextNode(nameError));
 		} else {
-			// we are creating a new game
-			GAMESTATE.hostGame(entered_name);
+			if (hash) {
+				// we are joining a game that already exists
+				GAMESTATE.sendName(entered_name);
+				UI.display_gamename(hash);
+			} else {
+				// we are creating a new game
+				GAMESTATE.hostGame(entered_name);
+			}
 		}
 	};
 
