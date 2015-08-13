@@ -126,6 +126,7 @@ var UI = (function () {
 	m.getIndexOfChar = function (letter) {
 		var div_letters = document.getElementById("letters");
 		var letters = div_letters.children;
+					//show_mp_menu(1);
 
 		for (var i = 0; i < letters.length; i++) {
 			if (letters[i].childNodes.length &&
@@ -357,6 +358,11 @@ var UI = (function () {
 	}
 
 	/**
+	 * This should be changed to true once the first player has joined the game.
+	 */
+	var got_first_player = false;
+
+	/**
 	 * Reveals a word in one of the completed words boxes.
 	 * @param word String The word to reveal.  Not case sensitive.
 	 * @param group Number The word group that this word belongs in.
@@ -395,17 +401,14 @@ var UI = (function () {
 
 		if (typeof(name) === "undefined") name = true;
 
-		// create the log message
-		var d = document.createElement("div");
-		d.appendChild(playerNameSpan(playername));
-		d.appendChild(document.createTextNode(" guessed word "+word));
-		logmsg(d);
+		// create the log message, but only if a game is currently happening
+		if (got_first_player) {
+			var d = document.createElement("div");
+			d.appendChild(playerNameSpan(playername));
+			d.appendChild(document.createTextNode(" guessed word "+word));
+			logmsg(d);
+		}
 	}
-
-	/**
-	 * This should be changed to true once the first player has joined the game.
-	 */
-	var got_first_player = false;
 
 	/**
 	 * Show the user that a new player has joined the game.
