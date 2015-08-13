@@ -167,13 +167,15 @@ var MULTIPLAYER = (function() {
 				}
 			}
 			if (state === 1) {
-				sdata = split(event.data, " ", 1);
+				sdata = split(event.data, " ", 2);
 				if (sdata[0] === ":player") {
-					onPlayerJoin(sdata[1]);
+					onPlayerJoin(sdata[2]);
+					if (sdata[1] === "n") {
+						onPlayerQuit(sdata[2]);
+					}
 				} else if (sdata[0] === ":endplayers") {
 					state = 2;
 					mp_sock = sock;
-					//show_mp_menu(1);
 				}
 			} else if (state === 2) {
 				if (event.data === ":badname") {
