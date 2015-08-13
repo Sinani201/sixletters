@@ -236,7 +236,9 @@ var UI = (function () {
 	 */
 	function logmsg(element) {
 		element.classList.add("logmsg");
-		document.getElementById("log").appendChild(element);
+		div_log = document.getElementById("log");
+		div_log.appendChild(element);
+		div_log.scrollTop = div_log.scrollHeight;
 	}
 
 	/**
@@ -393,9 +395,11 @@ var UI = (function () {
 
 		if (typeof(name) === "undefined") name = true;
 
-		// TODO: create the log message
+		// create the log message
 		var d = document.createElement("div");
-
+		d.appendChild(playerNameSpan(playername));
+		d.appendChild(document.createTextNode(" guessed word "+word));
+		logmsg(d);
 	}
 
 	/**
