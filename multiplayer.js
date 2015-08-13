@@ -39,6 +39,17 @@ var MULTIPLAYER = (function() {
 		players.push(name);
 	}
 
+	/**
+	 * Should be called whenever a player quits the game
+	 *
+	 * @param name String The name of whoever quit
+	 */
+	function onPlayerQuit(name) {
+		callbacks.onPlayerQuit(name);
+
+		players.splice(players.indexOf(name), 1);
+	}
+
 	function onServerMsg(event) {
 		console.log(">"+event.data);
 		var attempt_command = ":attempt ";
@@ -49,6 +60,8 @@ var MULTIPLAYER = (function() {
 			var sdata = split(event.data, " ", 1);
 			if (sdata[0] === ":join") {
 				onPlayerJoin(sdata[1]);
+			} else if (sdata[0] === ":quit") {
+				onPlayerQuit(sdata[1]);
 			}
 		}
 	}

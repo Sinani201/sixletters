@@ -256,8 +256,20 @@ var UI = (function () {
 		document.getElementById("log").appendChild(element);
 	}
 
-	/** A list of all players in the game. */
+	/**
+	 * A list of all players in the game.  Each element is a [String, boolean]
+	 * pair where the String is the player name and the boolean is false if the
+	 * player has left the game.  If a player rejoins, the boolean is reset to
+	 * true.
+	 */
 	var players = [];
+
+	/**
+	 * Get the index of a player name in the list of players.
+	 */
+	function indexOfPlayer(playername) {
+		return players.map(function(a) { return a[0]; }).indexOf(playername);
+	}
 
 	/**
 	 * Get a CSS color value for a given player index.
@@ -271,7 +283,6 @@ var UI = (function () {
 	 *                       name, bg, none.
 	 */
 	function cssColorForSection(playernum, maxplayers, section) {
-		//var h = getHue(playernum, maxplayers);
 		var h = (playernum * 0.618033988749895) % 1.0;
 		var s, l;
 
@@ -302,7 +313,7 @@ var UI = (function () {
 	 * @return String The CSS color string.
 	 */
 	function playerColor(playername, section) {
-		return cssColorForSection(players.indexOf(playername),
+		return cssColorForSection(indexOfPlayer(playername),
 										 players.length, section);
 	}
 
@@ -425,26 +436,67 @@ var UI = (function () {
 					table_words[i].guesser = newplayer;
 				}
 			}
+			got_first_player = true;
 		}
 
-		got_first_player = true;
-		players.push(newplayer);
+		var playerAlreadyExists = false;
+		for (var i = 0; i < players.length; i++) {
+			if (players[i][0] === newplayer) {
+				players[i][1] = true;
+				playerAlreadyExists = true;
+
+				var ul_playerul = document.getElementById("playerul");
+				playerul.children[i].classList.remove("quit");
+				
+				break;
+			}
+		}
+		if (!playerAlreadyExists) {
+			players.push([newplayer, true]);
+
+			// add this player to the list of players
+			var li = document.createElement("li");
+			li.appendChild(playerNameSpan(newplayer));
+
+			var ul_playerul = document.getElementById("playerul");
+			ul_playerul.appendChild(li);
+		}
 
 		// create the log message
 		var d = document.createElement("div");
 		d.appendChild(playerNameSpan(newplayer));
-		d.appendChild(document.createTextNode(" has joined the game."));
+		var joined = playerAlreadyExists ? "rejoined" : "joined";
+		d.appendChild(document.createTextNode(" has "+joined+" the game."));
 
 		logmsg(d);
 
-		// add this player to the list of players
-		var li = document.createElement("li");
-		li.appendChild(playerNameSpan(newplayer));
-
-		var ul_playerul = document.getElementById("playerul");
-		ul_playerul.appendChild(li);
-
 		resetColors();
+	}
+
+	/**
+	 * Should be called when a player leaves the game.
+	 *
+	 * @param playername String The name of the player who quit.
+	 */
+	m.onPlayerQuit = function (playername) {
+		for (var i = 0; i < players.length; i++) {
+			if (players[i][0] === playername) {
+				players[i][1] = false;
+
+				var ul_playerul = document.getElementById("playerul");
+				console.log(playerul.children[i]);
+				playerul.children[i].classList.add("quit");
+
+				break;
+			}
+		}
+
+		// create the log message
+		var d = document.createElement("div");
+		d.appendChild(playerNameSpan(playername));
+		d.appendChild(document.createTextNode(" has quit the game."));
+
+		logmsg(d);
 	}
 
 	/**

@@ -252,6 +252,7 @@ var GAMESTATE = (function() {
 				UI.show_mp_menu(2);
 				console.log("Lobby name "+lobbyname);
 			},
+			onPlayerQuit: UI.onPlayerQuit,
 			onPlayerJoin: function (name) {
 				UI.onPlayerJoin(name);
 			},
@@ -282,6 +283,7 @@ var GAMESTATE = (function() {
 				}
 				UI.onPlayerJoin(name);
 			},
+			onPlayerQuit: UI.onPlayerQuit,
 			onWordAttempt: m.onWordGuess,
 			makeGame: function (gamewords) {
 				m.createGame(gamewords);

@@ -110,6 +110,10 @@
 	list-style-type: none;
 }
 
+.quit {
+	text-decoration: line-through;
+}
+
 #log {
 	margin-top: 0.6em;
 	margin-left: 12em;
