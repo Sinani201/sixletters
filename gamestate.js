@@ -184,7 +184,7 @@ var GAMESTATE = (function() {
 	m.submitWord = function () {
 		var word = input_box.join("");
 		var playername = MULTIPLAYER.getPlayername();
-		// if we are not in a multiplayer game, the "default" name is just the
+		// If the user is not in a multiplayer game, the "default" name is just the
 		// value `true`.
 		if (!playername) {
 			playername = true;
@@ -198,6 +198,9 @@ var GAMESTATE = (function() {
 
 	/** Automatically guesses every correct word. */
 	m.revealAll = function () {
+		// Disable hosting multiplayer
+		UI.show_mp_menu(-1);
+
 		for (var i = 0; i < answers.length; i++) {
 			for (var j = 0; j < answers[i].length; j++) {
 				UI.revealWord(answers[i][j][0], i, j, 1);

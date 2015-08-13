@@ -485,9 +485,10 @@ var UI = (function () {
 	/**
 	 * Show a certain stage of multiplayer menu.
 	 *
-	 * 0 - The "share" button
-	 * 1 - The player name entry box
-	 * 2 - The main multiplayer screen with all game info
+	 * -1 - Show nothing
+	 *  0 - The "share" button
+	 *  1 - The player name entry box
+	 *  2 - The main multiplayer screen with all game info
 	 *
 	 * @param n Number The stage to show.
 	 */
@@ -503,6 +504,11 @@ var UI = (function () {
 			} else {
 				stages[i].style.display = "none";
 			}
+		}
+
+		// If the user is in a multiplayer game, disable the "give up" button.
+		if (n == 2) {
+			document.getElementById("b-giveup").style.display = "none";
 		}
 	}
 
