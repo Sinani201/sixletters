@@ -96,6 +96,8 @@ window.onload = function() {
 				GAMESTATE.backspaceChar();
 			} else if (key === 13) { // enter
 				GAMESTATE.submitWord();
+			} else if (key === 32) { // space
+				GAMESTATE.shuffleLetters();
 			} else {
 			  var i = GAMESTATE.indexOfLetter(keychar);
 			  if (i > -1) {
