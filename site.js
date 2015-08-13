@@ -72,11 +72,7 @@ window.onload = function() {
 			UI.display_gamename(hash);
 		} else {
 			// we are creating a new game
-			GAMESTATE.hostGame(entered_name, function(lobby) {
-				show_mp_menu(2);
-				console.log("Lobby name: "+lobby);
-				UI.display_gamename(lobby);
-			});
+			GAMESTATE.hostGame(entered_name);
 		}
 	};
 
