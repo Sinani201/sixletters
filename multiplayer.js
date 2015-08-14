@@ -1,6 +1,8 @@
 var MULTIPLAYER = (function() {
 	var m = {};
 
+	var serverurl = "ws://127.0.0.1:443/";
+
 	function split(s, separator, limit) {
 	  // split the initial string using limit
 	  var arr = s.split(separator, limit);
@@ -94,7 +96,7 @@ var MULTIPLAYER = (function() {
 	 */
 	m.hostGame = function (name, answers, cbacks) {
 		console.log(answers);
-		sock = new WebSocket("ws://127.0.0.1/");
+		sock = new WebSocket(serverurl);
 		playername = name;
 		callbacks = cbacks;
 
@@ -147,7 +149,7 @@ var MULTIPLAYER = (function() {
 	 *                      makeGame, onPlayerJoin, onWordAttempt
 	 */
 	m.joinGame = function (lobbyname, cbacks) {
-		sock = new WebSocket("ws://127.0.0.1/");
+		sock = new WebSocket(serverurl);
 		callbacks = cbacks;
 
 		var state = 0;
