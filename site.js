@@ -42,7 +42,7 @@ function validateName(name) {
 		return "No empty names allowed";
 	} else if (name.length > 10) {
 		return "Name may not be longer than ten characters";
-	} else if (!name.match(/^[0-9a-z]+$/)) {
+	} else if (!name.match(/^[0-9a-zA-Z]+$/)) {
 		return "Name must only use alphanumeric characters";
 	} else {
 		return null;
