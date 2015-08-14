@@ -71,6 +71,10 @@
 	margin-top: 1em;
 }
 
+#input-sharelink {
+	width: 20em;
+}
+
 #input-name {
 	width: 10em;
 }

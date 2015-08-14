@@ -85,7 +85,6 @@ var GAMESTATE = (function() {
 	 * @param dictionary Array A full dictionary of words.
 	 */
 	m.createGame = function (dictionary) {
-		console.log("creating game");
 		var dictionary = dictionary.map(function (a) {
 			return a.toLowerCase();
 		});
@@ -146,7 +145,6 @@ var GAMESTATE = (function() {
 	 *                          multiplayer round.
 	 */
 	m.onWordGuess = function (word, playername) {
-		console.log("word "+word+" guessed by "+playername);
 		var a = checkWord(word);
 		if (a) {
 			if (a[2]) {
@@ -253,7 +251,6 @@ var GAMESTATE = (function() {
 			onLobbyCreate: function (lobbyname) {
 				UI.display_gamename(lobbyname);
 				UI.show_mp_menu(2);
-				console.log("Lobby name "+lobbyname);
 			},
 			onPlayerQuit: UI.onPlayerQuit,
 			onPlayerJoin: function (name) {

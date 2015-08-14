@@ -474,7 +474,6 @@ var UI = (function () {
 				players[i][1] = false;
 
 				var ul_playerul = document.getElementById("playerul");
-				console.log(playerul.children[i]);
 				playerul.children[i].classList.add("quit");
 
 				break;
@@ -527,6 +526,8 @@ var UI = (function () {
 	m.display_gamename = function (gamename) {
 		document.getElementById("input-sharelink").value =
 				document.URL.split("#",1)[0] + "#"+gamename;
+
+		window.location.hash = gamename;
 	}
 
 	return m;

@@ -9,12 +9,10 @@ function setupMouseInput() {
 	for (var i = 0; i < div_letter_slots_c.length; i++) {
 		div_letter_slots_c[i].onclick = function() {
 			var sib = this.nextElementSibling;
-			console.log(sib);
 			if (!(sib && sib.childNodes.length)) {
 				GAMESTATE.backspaceChar();
 			}
 		}
-		console.log(div_letter_slots_c[i]);
 	}
 
 	// Click on an available letter to input it.
