@@ -1,7 +1,7 @@
 var MULTIPLAYER = (function() {
 	var m = {};
 
-	var serverurl = "ws://127.0.0.1:443/";
+	var serverurl = "ws://nisani.bot.nu:443/";
 
 	function split(s, separator, limit) {
 	  // split the initial string using limit
