@@ -126,7 +126,6 @@ var UI = (function () {
 	m.getIndexOfChar = function (letter) {
 		var div_letters = document.getElementById("letters");
 		var letters = div_letters.children;
-					//show_mp_menu(1);
 
 		for (var i = 0; i < letters.length; i++) {
 			if (letters[i].childNodes.length &&
@@ -512,8 +511,14 @@ var UI = (function () {
 			}
 		}
 
+		// autofocus the player input box
+		if (n == 1) {
+			var input_name = document.getElementById("input-name");
+			input_name.focus();
+			input_name.select();
+		}
 		// If the user is in a multiplayer game, disable the "give up" button.
-		if (n == 2) {
+		else if (n == 2) {
 			document.getElementById("b-giveup").style.display = "none";
 		}
 	}
