@@ -1,5 +1,6 @@
 #finished-words {
 	float: left;
+	margin-right: 3em;
 }
 
 .word {
@@ -27,7 +28,7 @@
 
 #game {
 	float: left;
-	padding: 3em 4em;
+	padding: 3em 0.5em;
 	font-size: x-large;
 }
 
