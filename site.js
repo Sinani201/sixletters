@@ -106,9 +106,14 @@ window.onload = function() {
 	window.addEventListener("keydown",  function(e) {
 		// if we are in a text field, don't treat the input in a special way
 		var d = e.srcElement || e.target;
+		var key = e.keyCode || e.which;
 		if (d.tagName.toUpperCase() === "INPUT" && d.type.toUpperCase() === "TEXT") {
+			if (key === 13) { // enter
+				if (d.id === "input-name") {
+					document.getElementById("b-entername").click();
+				}
+			}
 		} else {
-			var key = e.keyCode || e.which;
 			var keychar = String.fromCharCode(key);
 			var div_letters = document.getElementById("letters");
 			var letters = div_letters.children;
