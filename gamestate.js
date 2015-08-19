@@ -272,8 +272,10 @@ var GAMESTATE = (function() {
 	 * Join an already existing multiplayer game.
 	 *
 	 * @param lobbyname String The name of the game to join
+	 * @param callback Function A function to call after the game has been
+	 *                          created.
 	 */
-	m.joinGame = function (lobbyname) {
+	m.joinGame = function (lobbyname, callback) {
 		var gotName = false;
 		MULTIPLAYER.joinGame(lobbyname, {
 			onPlayerJoin: function (name) {
@@ -288,6 +290,7 @@ var GAMESTATE = (function() {
 			makeGame: function (gamewords) {
 				m.createGame(gamewords);
 				UI.show_mp_menu(2);
+				callback();
 			}
 		});
 	}

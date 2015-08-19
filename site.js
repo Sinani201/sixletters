@@ -51,8 +51,7 @@ window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
 		console.log("joining multiplayer game "+hash);
-		GAMESTATE.joinGame(hash);
-		setupMouseInput();
+		GAMESTATE.joinGame(hash, setupMouseInput);
 	} else {
 		console.log("starting new offline game");
 		var getWords = new XMLHttpRequest();
