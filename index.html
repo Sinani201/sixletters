@@ -37,13 +37,20 @@
 				<span id="nameerror"></span>
 			</div>
 			<div id="gameinfo">
-				<div id="sharelink">Share this link: <input id="input-sharelink" type="text" readonly/></div>
+				<div id="sharelink"><label for="input-sharelink">Share this link: </label><div class="resizable-box"><input id="input-sharelink" type="text" readonly/></div></div>
 				<div id="gameinfo-inner">
-					<div id="playerlist">
-						<h3>Players</h3>
-						<ul id="playerul"></ul>
+					<div class="tab" id="playerlist-tab">
+						<input type="radio" id="tab-1" name="gameinfo-group" checked>
+						<label for="tab-1">Players</label>
+						<div class="content" id="playerlist">
+							<ul id="playerul"></ul>
+						</div>
 					</div>
-					<div id="log"></div>
+					<div class="tab" id="log-tab">
+						<input type="radio" id="tab-2" name="gameinfo-group">
+						<label for="tab-2">Game Log</label>
+						<div class="content" id="log"></div>
+					</div>
 				</div>
 			</div>
 		</div>

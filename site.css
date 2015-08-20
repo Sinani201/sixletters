@@ -32,6 +32,24 @@
 	font-size: x-large;
 }
 
+@media screen and (max-width: 650px) {
+	.word-group {
+		display: inline;
+	}
+	#finished-words {
+		margin-right: 0;
+		max-height: 50vh;
+		font-size: 3vw;
+		-moz-column-fill: auto;
+		-moz-column-count: 3;
+	}
+	#game {
+		font-size: 5vw;
+		padding-top: 0.5em;
+	}
+}
+
+
 #letter-slots {
 	overflow: hidden;
 }
@@ -72,6 +90,12 @@
 	margin-top: 1em;
 }
 
+#sharelink label {
+	float: left;
+	line-height: 2em;
+	margin-right: 0.5em;
+}
+
 #input-sharelink {
 	width: 20em;
 }
@@ -103,31 +127,100 @@
 #playerlist {
 	width: 12em;
 	float: left;
+	padding-top: 0.5em;
 }
 
-#playerlist h3 {
+#playerlist-tab label {
 	font-size: 1.3em;
-	margin: 0;
 }
 
 #playerul {
-	padding-left: 0.8em;
-	margin-top: 0.8em;
+	padding-left: 0;
+	margin-top: 0.3em;
 }
 
 #playerul li {
 	list-style-type: none;
 }
 
-.quit {
-	text-decoration: line-through;
+#log-tab label {
+	display: none;
 }
 
 #log {
 	margin-top: 0.6em;
-	margin-left: 12em;
 	width: 20em;
 	height: 10em;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
+
+.tab {
+	float: left;
+}
+
+.tab [type=radio] {
+	display: none;
+}
+
+.tab label {
+	display: block;
+}
+
+@media screen and (max-width: 650px) {
+	/* undo some previous css */
+	#log-tab label {
+		display: inline;
+	}
+	#playerlist-tab label {
+		font-size: medium;
+	}
+
+	.resizable-box {
+		overflow: hidden;
+		padding-right: 7px;
+	}
+	.resizable-box > input[type="text"] {
+		width: 100% !important;
+	}
+	#gameinfo-inner {
+		position: relative;
+		min-height: 200px;
+		clear: both;
+		margin: 25px 0;
+		margin-right: 2.5em;
+	}
+	.tab label {
+		display: inline;
+		background: #eee;
+		padding: 10px;
+		border: 1px solid #ccc;
+		margin-left: -1px;
+		position: relative;
+		left: 1px;
+	}
+	.content {
+		position: absolute;
+		top: 28px;
+		left: 0;
+		background: white;
+		right: 0;
+		bottom: 0;
+		padding-left: 0.8em;
+		margin-left: 0;
+		width: 100% !important;
+	}
+	[type=radio]:checked ~ label {
+		background: white;
+		border-bottom: 1px solid white;
+		z-index: 2;
+	}
+	[type=radio]:checked ~ label ~ .content {
+		z-index: 1;
+	}
+}
+
+.quit {
+	text-decoration: line-through;
+}
+
