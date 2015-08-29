@@ -241,31 +241,39 @@ var GAMESTATE = (function() {
 		}
 	}
 
-	var mp_callbacks = {
-		onLobbyCreate: function (lobbyname) {
-			UI.display_gamename(lobbyname);
-			UI.show_mp_menu(2);
-		},
-		onPlayerQuit: UI.onPlayerQuit,
-		onWordAttempt: m.onWordGuess
-		makeGame: function (gamewords) {
-			m.createGame(gamewords);
-			UI.show_mp_menu(2);
-			callback();
-		}
-	};
+	/**
+	 * Generate the Object of multiplayer callback functions.
+	 *
+	 * @param onGameMake Function The function to call once the game has been
+	 *                            created. Optional.
+	 */
+	function mp_callbacks(onGameMake) {
+		if (typeof onGameMake === 'undefined') { onGameMake = function () {}; }
+
+		return {
+			onLobbyCreate: function (lobbyname) {
+				UI.display_gamename(lobbyname);
+				UI.show_mp_menu(2);
+				onGameMake();
+			},
+			onPlayerQuit: UI.onPlayerQuit,
+			onPlayerJoin: UI.onPlayerJoin,
+			onWordAttempt: m.onWordGuess,
+			makeGame: function (gamewords) {
+				m.createGame(gamewords);
+				UI.show_mp_menu(2);
+				onGameMake();
+			}
+		};
+	}
 
 	/**
 	 * Host a new multiplayer game.
 	 *
-	 * @param name String The name of whoever is hosting
+	 * @param name String The name of whoever is hosting.
 	 */
 	m.hostGame = function (name) {
-		MULTIPLAYER.hostGame(name, answers, {
-			onPlayerJoin: function (name) {
-				UI.onPlayerJoin(name);
-			},
-		});
+		MULTIPLAYER.hostGame(name, answers, mp_callbacks());
 	}
 
 	/**
@@ -284,16 +292,7 @@ var GAMESTATE = (function() {
 	 *                          created.
 	 */
 	m.joinGame = function (lobbyname, callback) {
-		var gotName = false;
-		MULTIPLAYER.joinGame(lobbyname, {
-			onPlayerJoin: function (name) {
-				if (!gotName) {
-					UI.show_mp_menu(1);
-					gotName = true;
-				}
-				UI.onPlayerJoin(name);
-			},
-		});
+		MULTIPLAYER.joinGame(lobbyname, mp_callbacks(callback));
 	}
 
 	return m;
