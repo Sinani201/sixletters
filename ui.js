@@ -425,6 +425,7 @@ var UI = (function () {
 					table_words[i].guesser = newplayer;
 				}
 			}
+	
 			got_first_player = true;
 		}
 

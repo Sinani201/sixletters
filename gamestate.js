@@ -244,11 +244,25 @@ var GAMESTATE = (function() {
 	/**
 	 * Generate the Object of multiplayer callback functions.
 	 *
+	 * @param isHosting Boolean True if these are callbacks for a host.
 	 * @param onGameMake Function The function to call once the game has been
 	 *                            created. Optional.
 	 */
-	function mp_callbacks(onGameMake) {
+	function mp_callbacks(isHosting, onGameMake) {
 		if (typeof onGameMake === 'undefined') { onGameMake = function () {}; }
+
+		var onJoin = UI.onPlayerJoin;
+		if (!isHosting) {
+			var gotName = false;
+
+			onJoin = function (name) {
+				if (!gotName) {
+					UI.show_mp_menu(1);
+					gotName = true;
+				}
+				UI.onPlayerJoin(name);
+			};
+		}
 
 		return {
 			onLobbyCreate: function (lobbyname) {
@@ -257,7 +271,7 @@ var GAMESTATE = (function() {
 				onGameMake();
 			},
 			onPlayerQuit: UI.onPlayerQuit,
-			onPlayerJoin: UI.onPlayerJoin,
+			onPlayerJoin: onJoin,
 			onWordAttempt: m.onWordGuess,
 			makeGame: function (gamewords) {
 				m.createGame(gamewords);
@@ -273,7 +287,7 @@ var GAMESTATE = (function() {
 	 * @param name String The name of whoever is hosting.
 	 */
 	m.hostGame = function (name) {
-		MULTIPLAYER.hostGame(name, answers, mp_callbacks());
+		MULTIPLAYER.hostGame(name, answers, mp_callbacks(true));
 	}
 
 	/**
@@ -292,7 +306,7 @@ var GAMESTATE = (function() {
 	 *                          created.
 	 */
 	m.joinGame = function (lobbyname, callback) {
-		MULTIPLAYER.joinGame(lobbyname, mp_callbacks(callback));
+		MULTIPLAYER.joinGame(lobbyname, mp_callbacks(false, callback));
 	}
 
 	return m;

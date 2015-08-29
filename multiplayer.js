@@ -111,9 +111,7 @@ var MULTIPLAYER = (function() {
 	 * @param answers String A list of word groups containing every word in the
 	 * 						 game. Each "word" should actually be a triple, as
 	 * 						 described in GAMESTATE#answers.
-	 * @param cbacks Object An object with callback functions.  Should have the
-	 *                      following callbacks:
-	 *                      onLobbyCreate, onPlayerJoin, onWordAttempt
+	 * @param cbacks Object An object with multiplayer callback functions.
 	 */
 	m.hostGame = function (name, answers, cbacks) {
 		console.log(answers);
@@ -165,9 +163,7 @@ var MULTIPLAYER = (function() {
 	 * Creates a connection to the game server and joins an existing game.
 	 *
 	 * @param lobbyname String The name of the game to join
-	 * @param cbacks Object An object with callback functions.  Should have the
-	 *                      following callbacks:
-	 *                      makeGame, onPlayerJoin, onWordAttempt
+	 * @param cbacks Object An object with multiplayer callback functions.
 	 */
 	m.joinGame = function (lobbyname, cbacks) {
 		sock = new WebSocket(serverurl);
