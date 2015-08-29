@@ -75,7 +75,7 @@ window.onload = function() {
 	};
 
 	document.getElementById("b-cancelname").onclick = function() {
-		show_mp_menu(0);
+		UI.show_mp_menu(0);
 	};
 
 	document.getElementById("b-entername").onclick = function() {
