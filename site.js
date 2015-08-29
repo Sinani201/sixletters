@@ -55,6 +55,7 @@ window.onload = function() {
 	} else {
 		console.log("starting new offline game");
 		var getWords = new XMLHttpRequest();
+		q
 		getWords.onload = function() {
 			UI.show_mp_menu(0);
 			GAMESTATE.createGame(this.responseText.split("\n"));
@@ -65,11 +66,8 @@ window.onload = function() {
 		getWords.send();
 	}
 
-	document.getElementById("b-shuffle").onclick = GAMESTATE.shuffleLetters;
 	document.getElementById("b-enter").onclick = GAMESTATE.submitWord;
-	document.getElementById("b-clear").onclick = function() {
-		while(GAMESTATE.backspaceChar());
-	};
+	document.getElementById("b-shuffle").onclick = GAMESTATE.shuffleLetters;
 	document.getElementById("b-giveup").onclick = GAMESTATE.revealAll;
 
 	document.getElementById("b-host").onclick = function() {

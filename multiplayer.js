@@ -1,7 +1,28 @@
+/**y 
+ * When in a multiplayer game, this module communicates with gamestate.js
+ * through a set of callback functions.  These functions should be implemented:
+ *
+ * onLobbyCreate(String lobbyname)
+ * Only necessary for hosting.  Will be called once the multiplayer game has
+ * been registered server-side and is ready to accept new players to join.
+ *
+ * onPlayerJoin(String name)
+ * Will be called if a player joins the game.
+ *
+ * onPlayerQuit(String name)
+ * Will be called if a player quits the game.
+ *
+ * onWordAttempt(String word, String playername)
+ * Will be called whenever a player guesses a word.
+ *
+ * makeGame(Array gamewords)
+ * Only necessary for joining an already existing game.  After joining, this
+ * function will be called with the array of every word in the game.
+ */
 var MULTIPLAYER = (function() {
 	var m = {};
 
-	var serverurl = "ws://nisani.bot.nu:443/";
+	var serverurl = "ws://127.0.0.1:443/";
 
 	function split(s, separator, limit) {
 	  // split the initial string using limit
@@ -201,4 +222,4 @@ var MULTIPLAYER = (function() {
 	}
 
 	return m;
-}());
+}());nisani.bot.nu

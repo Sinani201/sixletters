@@ -241,6 +241,20 @@ var GAMESTATE = (function() {
 		}
 	}
 
+	var mp_callbacks = {
+		onLobbyCreate: function (lobbyname) {
+			UI.display_gamename(lobbyname);
+			UI.show_mp_menu(2);
+		},
+		onPlayerQuit: UI.onPlayerQuit,
+		onWordAttempt: m.onWordGuess
+		makeGame: function (gamewords) {
+			m.createGame(gamewords);
+			UI.show_mp_menu(2);
+			callback();
+		}
+	};
+
 	/**
 	 * Host a new multiplayer game.
 	 *
@@ -248,15 +262,9 @@ var GAMESTATE = (function() {
 	 */
 	m.hostGame = function (name) {
 		MULTIPLAYER.hostGame(name, answers, {
-			onLobbyCreate: function (lobbyname) {
-				UI.display_gamename(lobbyname);
-				UI.show_mp_menu(2);
-			},
-			onPlayerQuit: UI.onPlayerQuit,
 			onPlayerJoin: function (name) {
 				UI.onPlayerJoin(name);
 			},
-			onWordAttempt: m.onWordGuess
 		});
 	}
 
@@ -285,13 +293,6 @@ var GAMESTATE = (function() {
 				}
 				UI.onPlayerJoin(name);
 			},
-			onPlayerQuit: UI.onPlayerQuit,
-			onWordAttempt: m.onWordGuess,
-			makeGame: function (gamewords) {
-				m.createGame(gamewords);
-				UI.show_mp_menu(2);
-				callback();
-			}
 		});
 	}
 
