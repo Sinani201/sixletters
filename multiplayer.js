@@ -18,6 +18,10 @@
  * makeGame(Array gamewords)
  * Only necessary for joining an already existing game.  After joining, this
  * function will be called with the array of every word in the game.
+ *
+ * noLobbyError()
+ * Only necessary for joining an already existing game.  This function will be
+ * called if the user has joined a game that does not exist.
  */
 var MULTIPLAYER = (function() {
 	var m = {};
@@ -180,7 +184,7 @@ var MULTIPLAYER = (function() {
 			console.log(">"+event.data);
 			if (state === 0) {
 				if (event.data == ":nolobby") {
-					// TODO: display this error to the user
+					callbacks.noLobbyError();
 					console.log("error: no lobby of that name");
 				} else {
 					state = 1;
@@ -199,7 +203,6 @@ var MULTIPLAYER = (function() {
 				}
 			} else if (state === 2) {
 				if (event.data === ":badname") {
-					// TODO: display this error to the user
 					console.log("error: bad name");
 				} else {
 					onPlayerJoin(playername);

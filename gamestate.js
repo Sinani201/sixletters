@@ -277,7 +277,8 @@ var GAMESTATE = (function() {
 				m.createGame(gamewords);
 				UI.show_mp_menu(2);
 				onGameMake();
-			}
+			},
+			noLobbyError: UI.noLobbyError
 		};
 	}
 

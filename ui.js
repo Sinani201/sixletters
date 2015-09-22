@@ -488,6 +488,16 @@ var UI = (function () {
 		logmsg(d);
 	}
 
+	m.noLobbyError = function () {
+		console.log("hello");
+		document.body.appendChild(document.createTextNode("You are attempting to join a game that does not exist! "));
+		var link = document.createElement("a");
+		link.href = document.URL.replace(/#.*$/, "");
+		link.appendChild(document.createTextNode("Click here"));
+		document.body.appendChild(link);
+		document.body.appendChild(document.createTextNode(" to go back to the main page."));
+	}
+
 	/**
 	 * Show a certain stage of multiplayer menu.
 	 *
