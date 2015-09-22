@@ -50,10 +50,8 @@ function validateName(name) {
 window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
-		console.log("joining multiplayer game "+hash);
 		GAMESTATE.joinGame(hash, setupMouseInput);
 	} else {
-		console.log("starting new offline game");
 		var getWords = new XMLHttpRequest();
 		getWords.onload = function() {
 			UI.show_mp_menu(0);
