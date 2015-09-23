@@ -15,6 +15,14 @@
  * onWordAttempt(String word, String playername)
  * Will be called whenever a player guesses a word.
  *
+ * onGiveUpVote(String playername, boolean on)
+ * Will be called if a player votes to give up, or removes their vote to give
+ * up.  `on` is true if the vote is to give up, and false if the player is
+ * removing their vote.
+ *
+ * onAllGiveUp()
+ * Will be called when everyone has given up.
+ *
  * makeGame(Array gamewords)
  * Only necessary for joining an already existing game.  After joining, this
  * function will be called with the array of every word in the game.
@@ -39,7 +47,7 @@ var MULTIPLAYER = (function() {
 	}
 
 	var sock;
-	var playername;
+	var playername = null;
 	var callbacks;
 
 	// the list of players in this game
@@ -83,12 +91,18 @@ var MULTIPLAYER = (function() {
 		if (event.data.substring(0, attempt_command.length) === attempt_command) {
 			sdata = split(event.data, " ", 2);
 			callbacks.onWordAttempt(sdata[1], sdata[2]);
+		} else if (event.data === ":allgiveup") {
+			callbacks.onAllGiveUp();
 		} else {
 			var sdata = split(event.data, " ", 1);
 			if (sdata[0] === ":join") {
 				onPlayerJoin(sdata[1]);
 			} else if (sdata[0] === ":quit") {
 				onPlayerQuit(sdata[1]);
+			} else if (sdata[0] === ":giveup") {
+				callbacks.onGiveUpVote(true, sdata[1]);
+			} else if (sdata[0] === ":ungiveup") {
+				callbacks.onGiveUpVote(false, sdata[1]);
 			}
 		}
 	}
@@ -101,6 +115,22 @@ var MULTIPLAYER = (function() {
 	m.announceWordGuess = function (word) {
 		if (sock) {
 			sock.send(":attempt "+word.toLowerCase());
+		}
+	}
+
+	/**
+	 * Should be called when the user votes or unvotes to give up.
+	 *
+	 * @param on Boolean True if the player is voting to give up, false if the
+	 *                   vote is being removed.
+	 */
+	m.voteGiveUp = function (on) {
+		if (sock) {
+			if (on) {
+				sock.send(":giveup");
+			} else {
+				sock.send(":ungiveup");
+			}
 		}
 	}
 

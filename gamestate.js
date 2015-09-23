@@ -195,14 +195,33 @@ var GAMESTATE = (function() {
 	}
 
 	/** Automatically guesses every correct word. */
-	m.revealAll = function () {
-		// Disable hosting multiplayer
-		UI.show_mp_menu(-1);
-
+	function revealAll() {
 		for (var i = 0; i < answers.length; i++) {
 			for (var j = 0; j < answers[i].length; j++) {
 				UI.revealWord(answers[i][j][0], i, j, 1);
 			}
+		}
+	}
+
+
+	/**
+	 * Gives up immediately if the user is not in a multiplayer game.
+	 * Otherwise, sends the message to the multiplayer server that the user
+	 * is voting to give up.
+	 *
+	 * @param on Boolean True if the user is voting to give up, false if the
+	 *                   vote is being removed.
+	 */
+	m.giveUp = function (on) {
+		var playername = MULTIPLAYER.getPlayername();
+		if (playername === null && on) {
+			// Disable hosting multiplayer
+			UI.show_mp_menu(-1);
+
+			revealAll();
+		} else {
+			MULTIPLAYER.voteGiveUp(on);
+			UI.onGiveUpVote(on, playername);
 		}
 	}
 
@@ -278,6 +297,8 @@ var GAMESTATE = (function() {
 				UI.show_mp_menu(2);
 				onGameMake();
 			},
+			onGiveUpVote: UI.onGiveUpVote,
+			onAllGiveUp: revealAll,
 			noLobbyError: UI.noLobbyError
 		};
 	}
