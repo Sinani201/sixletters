@@ -65,7 +65,16 @@ window.onload = function() {
 
 	document.getElementById("b-enter").onclick = GAMESTATE.submitWord;
 	document.getElementById("b-shuffle").onclick = GAMESTATE.shuffleLetters;
-	document.getElementById("b-giveup").onclick = GAMESTATE.revealAll;
+	document.getElementById("b-giveup").onclick = function() {
+		document.getElementById("b-ungiveup").style.display = "inline";
+		this.style.display = "none";
+		GAMESTATE.giveUp(true);
+	};
+	document.getElementById("b-ungiveup").onclick = function() {
+		document.getElementById("b-giveup").style.display = "inline";
+		this.style.display = "none";
+		GAMESTATE.giveUp(false);
+	};
 
 	document.getElementById("b-host").onclick = function() {
 		UI.show_mp_menu(1);

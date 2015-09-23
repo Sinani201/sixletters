@@ -85,6 +85,10 @@
 	cursor: pointer;
 }
 
+#b-ungiveup {
+	display: none;
+}
+
 #multiplayer {
 	font-size: medium;
 	margin-top: 1em;
@@ -224,3 +228,6 @@
 	text-decoration: line-through;
 }
 
+.gaveup:after {
+	content: " ⚐";
+}

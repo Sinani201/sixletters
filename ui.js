@@ -400,11 +400,16 @@ var UI = (function () {
 
 		if (typeof(name) === "undefined") name = true;
 
-		// create the log message, but only if a game is currently happening
+		// create the log message, but only if a multiplayer game is currently happening
 		if (got_first_player) {
 			var d = document.createElement("div");
-			d.appendChild(playerNameSpan(playername));
-			d.appendChild(document.createTextNode(" guessed word "+word));
+			// if this word was revealed through giving up
+			if (playername === 1) {
+				d.appendChild(document.createTextNode("You forgot "+word));
+			} else {
+				d.appendChild(playerNameSpan(playername));
+				d.appendChild(document.createTextNode(" guessed word "+word));
+			}
 			logmsg(d);
 		}
 	}
@@ -475,6 +480,7 @@ var UI = (function () {
 
 				var ul_playerul = document.getElementById("playerul");
 				playerul.children[i].classList.add("quit");
+				playerul.children[i].classList.remove("gaveup");
 
 				break;
 			}
@@ -488,14 +494,46 @@ var UI = (function () {
 		logmsg(d);
 	}
 
+	/**
+	 * Called whenever any player votes or removes their vote to give up.
+	 *
+	 * @param on Boolean True if the player is voting to give up, false if the
+	 *                   vote is being removed.
+	 * @param playername String The player that is placing this vote.
+	 */
+	m.onGiveUpVote = function (on, playername) {
+		for (var i = 0; i < players.length; i++) {
+			if (players[i][0] === playername) {
+				if (on) {
+					playerul.children[i].classList.add("gaveup");
+				} else {
+					playerul.children[i].classList.remove("gaveup");
+				}
+			}
+		}
+
+		// create the log message
+		var d = document.createElement("div");
+		d.appendChild(playerNameSpan(playername));
+		var text = " votes to give up";
+		if (!on) {
+			text = " removes vote to give up";
+		}
+		d.appendChild(document.createTextNode(text));
+
+		logmsg(d);
+	}
+
 	m.noLobbyError = function () {
 		console.log("hello");
-		document.body.appendChild(document.createTextNode("You are attempting to join a game that does not exist! "));
+		document.body.appendChild(document.createTextNode(
+				"You are attempting to join a game that does not exist! "));
 		var link = document.createElement("a");
 		link.href = document.URL.replace(/#.*$/, "");
 		link.appendChild(document.createTextNode("Click here"));
 		document.body.appendChild(link);
-		document.body.appendChild(document.createTextNode(" to go back to the main page."));
+		document.body.appendChild(
+				document.createTextNode(" to go back to the main page."));
 	}
 
 	/**
@@ -523,14 +561,21 @@ var UI = (function () {
 		}
 
 		// autofocus the player input box
-		if (n == 1) {
+		if (n === 1) {
 			var input_name = document.getElementById("input-name");
 			input_name.focus();
 			input_name.select();
 		}
-		// If the user is in a multiplayer game, disable the "give up" button.
-		else if (n == 2) {
-			document.getElementById("b-giveup").style.display = "none";
+		// If the user is in a multiplayer game, change the text of the give up
+		// button
+		else if (n === 2) {
+			document.getElementById("b-giveup").firstChild.data =
+					"Vote to give up";
+		}
+		// A state of -1 means that the give up button has been pressed in a
+		// local game.
+		else if (n === -1) {
+			document.getElementById("b-ungiveup").style.display = "none";
 		}
 	}
 
