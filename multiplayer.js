@@ -34,7 +34,7 @@
 var MULTIPLAYER = (function() {
 	var m = {};
 
-	var serverurl = "ws://nisani.bot.nu:443/";
+	var serverurl = "ws://dkess.me/sixletters/ws";
 
 	function split(s, separator, limit) {
 	  // split the initial string using limit
