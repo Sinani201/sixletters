@@ -1,3 +1,5 @@
+var LEVELS_COUNT = 1069;
+
 /**
  * Should be called after the game UI has been initialized.  Allows the user to
  * click on the last input letter to backspace it, and click on available
@@ -52,15 +54,35 @@ window.onload = function() {
 	if (hash) {
 		GAMESTATE.joinGame(hash, setupMouseInput);
 	} else {
-		var getWords = new XMLHttpRequest();
-		getWords.onload = function() {
-			UI.show_mp_menu(0);
-			GAMESTATE.createGame(this.responseText.split("\n"));
-			setupMouseInput();
+		var getLevel = new XMLHttpRequest();
+		getLevel.onload = function() {
+			if (this.status == 404) {
+				// fall back to downloading the whole word list
+				var getWords = new XMLHttpRequest();
+				getWords.onload = function() {
+					UI.show_mp_menu(0);
+					GAMESTATE.createGame(this.responseText.split("\n"));
+					setupMouseInput();
+				};
+				getWords.responseType = "text";
+				getWords.open("get", "words.txt", true);
+				getWords.send();
+			} else {
+				UI.show_mp_menu(0);
+				GAMESTATE.createGame(this.responseText.split("\n"));
+				setupMouseInput();
+			}
 		};
-		getWords.responseType = "text";
-		getWords.open("get", "words.txt", true);
-		getWords.send();
+
+		getLevel.responseType = "text";
+
+		// generate a random level number
+		var levelnum = Math.floor(Math.random() * LEVELS_COUNT);
+		var padded = "000" + levelnum;
+		padded = padded.substr(padded.length - 4);
+
+		getLevel.open("get", "levels/" + padded + ".txt", true);
+		getLevel.send();
 	}
 
 	document.getElementById("b-enter").onclick = GAMESTATE.submitWord;
