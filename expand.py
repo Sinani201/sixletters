@@ -58,4 +58,4 @@ for lw in words:
             counter += 1
 
 print('// Put this in your config.js file:')
-print('LEVELS_COUNT="{}";'.format(counter))
+print('LEVELS_COUNT={};'.format(counter))
