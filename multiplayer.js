@@ -9,6 +9,10 @@
  * onPlayerJoin(String name)
  * Will be called if a player joins the game.
  *
+ * onNameTaken()
+ * Will be called if the user tries to join a game with a name that has been
+ * taken.
+ *
  * onPlayerQuit(String name)
  * Will be called if a player quits the game.
  *
@@ -213,14 +217,23 @@ var MULTIPLAYER = (function() {
 		sock.onmessage = function (event) {
 			console.log(">"+event.data);
 			if (state === 0) {
-				if (event.data == ":nolobby") {
+				if (event.data === ":nolobby") {
 					callbacks.noLobbyError();
 					console.log("error: no lobby of that name");
-				} else {
+				} else if (event.data === ":ok") {
 					state = 1;
 				}
+			} else if (state === 1) {
+				if (event.data === ":badname") {
+					console.log("error: bad name");
+				} else if (event.data === ":taken") {
+					callbacks.onNameTaken();
+				} else {
+					onPlayerJoin(playername);
+					state = 2;
+				}
 			}
-			if (state === 1) {
+			if (state === 2) {
 				sdata = split(event.data, " ", 2);
 				if (sdata[0] === ":player") {
 					onPlayerJoin(sdata[2]);
@@ -228,22 +241,14 @@ var MULTIPLAYER = (function() {
 						onPlayerQuit(sdata[2]);
 					}
 				} else if (sdata[0] === ":endplayers") {
-					state = 2;
+					state = 3;
 					mp_sock = sock;
 				}
-			} else if (state === 2) {
-				if (event.data === ":badname") {
-					console.log("error: bad name");
-				} else {
-					onPlayerJoin(playername);
-					state = 3;
-				}
-			}
-			if (state === 3) {
-				word = event.data.split(" ", 1)[0];
-				if (word !== ":endwords") {
-					sent_words.push(word);
-				} else {
+			} else if (state === 3) {
+				sdata = event.data.split(" ", 1);
+				if (sdata[0] === ":word") {
+					sent_words.push(sdata[1]);
+				} else if (sdata[0] === ":endwords") {
 					callbacks.makeGame(sent_words);
 					sock.onmessage = onServerMsg;
 				}

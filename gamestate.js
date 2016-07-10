@@ -289,6 +289,7 @@ var GAMESTATE = (function() {
 				UI.show_mp_menu(2);
 				onGameMake();
 			},
+			onNameTaken: UI.onNameTaken,
 			onPlayerQuit: UI.onPlayerQuit,
 			onPlayerJoin: onJoin,
 			onWordAttempt: m.onWordGuess,
