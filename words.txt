@@ -739,6 +739,7 @@ bison
 bisons
 bistro
 bit
+bitch
 bite
 biter
 bites
@@ -7138,6 +7139,7 @@ shirk
 shirks
 shirt
 shirts
+shit
 shiver
 shock
 shod
