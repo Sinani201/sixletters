@@ -9,6 +9,10 @@
  * onPlayerJoin(String name)
  * Will be called if a player joins the game.
  *
+ * onNameTaken()
+ * Will be called if the user tries to join a game with a name that has been
+ * taken.
+ *
  * onPlayerQuit(String name)
  * Will be called if a player quits the game.
  *
@@ -33,8 +37,6 @@
  */
 var MULTIPLAYER = (function() {
 	var m = {};
-
-	var serverurl = "wss://dkess.me/sixletters/ws";
 
 	function split(s, separator, limit) {
 	  // split the initial string using limit
@@ -90,6 +92,10 @@ var MULTIPLAYER = (function() {
 		var attempt_command = ":attempt ";
 		if (event.data.substring(0, attempt_command.length) === attempt_command) {
 			sdata = split(event.data, " ", 2);
+			// underscore means this game has been given up on
+			if (sdata[2] === "_") {
+				sdata[2] = 1;
+			}
 			callbacks.onWordAttempt(sdata[1], sdata[2]);
 		} else if (event.data === ":allgiveup") {
 			callbacks.onAllGiveUp();
@@ -149,7 +155,7 @@ var MULTIPLAYER = (function() {
 	 */
 	m.hostGame = function (name, answers, cbacks) {
 		console.log(answers);
-		sock = new WebSocket(serverurl);
+		sock = new WebSocket(WEBSOCKET_SERVER);
 		playername = name;
 		callbacks = cbacks;
 
@@ -166,7 +172,7 @@ var MULTIPLAYER = (function() {
 						wordGuessStatus = " y";
 					}
 
-					sock.send(answers[i][j][0] + wordGuessStatus);
+					sock.send(":addword " + answers[i][j][0] + wordGuessStatus);
 				}
 			}
 
@@ -200,7 +206,7 @@ var MULTIPLAYER = (function() {
 	 * @param cbacks Object An object with multiplayer callback functions.
 	 */
 	m.joinGame = function (lobbyname, cbacks) {
-		sock = new WebSocket(serverurl);
+		sock = new WebSocket(WEBSOCKET_SERVER);
 		callbacks = cbacks;
 
 		var state = 0;
@@ -211,16 +217,22 @@ var MULTIPLAYER = (function() {
 		};
 
 		sock.onmessage = function (event) {
-			console.log(">"+event.data);
 			if (state === 0) {
-				if (event.data == ":nolobby") {
+				if (event.data === ":noexist") {
 					callbacks.noLobbyError();
-					console.log("error: no lobby of that name");
-				} else {
+				} else if (event.data === ":ok") {
 					state = 1;
 				}
+			} else if (state === 1) {
+				if (event.data === ":badname") {
+					console.log("error: bad name");
+				} else if (event.data === ":taken") {
+					callbacks.onNameTaken();
+				} else {
+					state = 2;
+				}
 			}
-			if (state === 1) {
+			if (state === 2) {
 				sdata = split(event.data, " ", 2);
 				if (sdata[0] === ":player") {
 					onPlayerJoin(sdata[2]);
@@ -228,22 +240,15 @@ var MULTIPLAYER = (function() {
 						onPlayerQuit(sdata[2]);
 					}
 				} else if (sdata[0] === ":endplayers") {
-					state = 2;
+					state = 3;
 					mp_sock = sock;
 				}
-			} else if (state === 2) {
-				if (event.data === ":badname") {
-					console.log("error: bad name");
-				} else {
-					onPlayerJoin(playername);
-					state = 3;
-				}
-			}
-			if (state === 3) {
-				word = event.data.split(" ", 1)[0];
-				if (word !== ":endwords") {
-					sent_words.push(word);
-				} else {
+			} else if (state === 3) {
+				sdata = split(event.data, " ", 1);
+				if (sdata[0] === ":word") {
+					sent_words.push(sdata[1]);
+				} else if (sdata[0] === ":endwords") {
+					console.log(sent_words);
 					callbacks.makeGame(sent_words);
 					sock.onmessage = onServerMsg;
 				}

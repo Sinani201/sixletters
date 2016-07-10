@@ -414,6 +414,14 @@ var UI = (function () {
 		}
 	}
 
+	m.onNameTaken = function () {
+		var span_error = document.getElementById("nameerror");
+		if (span_error.childNodes.length) {
+			span_error.removeChild(span_error.firstChild);
+		}
+		span_error.appendChild(document.createTextNode("That name has been taken"));
+	}
+
 	/**
 	 * Show the user that a new player has joined the game.
 	 * @param newplayer String The name of the player that joined.
@@ -525,7 +533,6 @@ var UI = (function () {
 	}
 
 	m.noLobbyError = function () {
-		console.log("hello");
 		document.body.appendChild(document.createTextNode(
 				"You are attempting to join a game that does not exist! "));
 		var link = document.createElement("a");
@@ -534,6 +541,8 @@ var UI = (function () {
 		document.body.appendChild(link);
 		document.body.appendChild(
 				document.createTextNode(" to go back to the main page."));
+
+		m.show_mp_menu(-1);
 	}
 
 	/**

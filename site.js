@@ -53,24 +53,31 @@ window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
 		GAMESTATE.joinGame(hash, setupMouseInput);
+		UI.show_mp_menu(1);
 	} else {
+		var init_game = function(response) {
+			if (typeof WEBSOCKET_SERVER === 'undefined' || !WEBSOCKET_SERVER) {
+				UI.show_mp_menu(-1);
+			} else {
+				UI.show_mp_menu(0);
+			}
+			GAMESTATE.createGame(response.split("\n"));
+			setupMouseInput();
+		};
+
 		var getLevel = new XMLHttpRequest();
 		getLevel.onload = function() {
 			if (this.status == 404) {
 				// fall back to downloading the whole word list
 				var getWords = new XMLHttpRequest();
 				getWords.onload = function() {
-					UI.show_mp_menu(0);
-					GAMESTATE.createGame(this.responseText.split("\n"));
-					setupMouseInput();
+					init_game(this.responseText);
 				};
 				getWords.responseType = "text";
 				getWords.open("get", "words.txt", true);
 				getWords.send();
 			} else {
-				UI.show_mp_menu(0);
-				GAMESTATE.createGame(this.responseText.split("\n"));
-				setupMouseInput();
+				init_game(this.responseText);
 			}
 		};
 
