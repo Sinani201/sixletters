@@ -533,7 +533,6 @@ var UI = (function () {
 	}
 
 	m.noLobbyError = function () {
-		console.log("hello");
 		document.body.appendChild(document.createTextNode(
 				"You are attempting to join a game that does not exist! "));
 		var link = document.createElement("a");
@@ -542,6 +541,8 @@ var UI = (function () {
 		document.body.appendChild(link);
 		document.body.appendChild(
 				document.createTextNode(" to go back to the main page."));
+
+		m.show_mp_menu(-1);
 	}
 
 	/**

@@ -38,8 +38,6 @@
 var MULTIPLAYER = (function() {
 	var m = {};
 
-	var serverurl = "wss://dkess.me/sixletters/ws";
-
 	function split(s, separator, limit) {
 	  // split the initial string using limit
 	  var arr = s.split(separator, limit);
@@ -94,6 +92,10 @@ var MULTIPLAYER = (function() {
 		var attempt_command = ":attempt ";
 		if (event.data.substring(0, attempt_command.length) === attempt_command) {
 			sdata = split(event.data, " ", 2);
+			// underscore means this game has been given up on
+			if (sdata[2] === "_") {
+				sdata[2] = 1;
+			}
 			callbacks.onWordAttempt(sdata[1], sdata[2]);
 		} else if (event.data === ":allgiveup") {
 			callbacks.onAllGiveUp();
@@ -153,7 +155,7 @@ var MULTIPLAYER = (function() {
 	 */
 	m.hostGame = function (name, answers, cbacks) {
 		console.log(answers);
-		sock = new WebSocket(serverurl);
+		sock = new WebSocket(WEBSOCKET_SERVER);
 		playername = name;
 		callbacks = cbacks;
 
@@ -170,7 +172,7 @@ var MULTIPLAYER = (function() {
 						wordGuessStatus = " y";
 					}
 
-					sock.send(answers[i][j][0] + wordGuessStatus);
+					sock.send(":addword " + answers[i][j][0] + wordGuessStatus);
 				}
 			}
 
@@ -204,7 +206,7 @@ var MULTIPLAYER = (function() {
 	 * @param cbacks Object An object with multiplayer callback functions.
 	 */
 	m.joinGame = function (lobbyname, cbacks) {
-		sock = new WebSocket(serverurl);
+		sock = new WebSocket(WEBSOCKET_SERVER);
 		callbacks = cbacks;
 
 		var state = 0;
@@ -215,11 +217,9 @@ var MULTIPLAYER = (function() {
 		};
 
 		sock.onmessage = function (event) {
-			console.log(">"+event.data);
 			if (state === 0) {
-				if (event.data === ":nolobby") {
+				if (event.data === ":noexist") {
 					callbacks.noLobbyError();
-					console.log("error: no lobby of that name");
 				} else if (event.data === ":ok") {
 					state = 1;
 				}
@@ -229,7 +229,6 @@ var MULTIPLAYER = (function() {
 				} else if (event.data === ":taken") {
 					callbacks.onNameTaken();
 				} else {
-					onPlayerJoin(playername);
 					state = 2;
 				}
 			}
@@ -245,10 +244,11 @@ var MULTIPLAYER = (function() {
 					mp_sock = sock;
 				}
 			} else if (state === 3) {
-				sdata = event.data.split(" ", 1);
+				sdata = split(event.data, " ", 1);
 				if (sdata[0] === ":word") {
 					sent_words.push(sdata[1]);
 				} else if (sdata[0] === ":endwords") {
+					console.log(sent_words);
 					callbacks.makeGame(sent_words);
 					sock.onmessage = onServerMsg;
 				}

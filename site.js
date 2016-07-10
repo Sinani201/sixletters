@@ -53,6 +53,7 @@ window.onload = function() {
 	var hash = window.location.hash.substr(1);
 	if (hash) {
 		GAMESTATE.joinGame(hash, setupMouseInput);
+		UI.show_mp_menu(1);
 	} else {
 		var getLevel = new XMLHttpRequest();
 		getLevel.onload = function() {
@@ -68,7 +69,9 @@ window.onload = function() {
 				getWords.open("get", "words.txt", true);
 				getWords.send();
 			} else {
-				UI.show_mp_menu(0);
+				if (WEBSOCKET_SERVER) {
+					UI.show_mp_menu(0);
+				}
 				GAMESTATE.createGame(this.responseText.split("\n"));
 				setupMouseInput();
 			}
