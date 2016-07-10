@@ -1,5 +1,3 @@
-var LEVELS_COUNT = 1069;
-
 /**
  * Should be called after the game UI has been initialized.  Allows the user to
  * click on the last input letter to backspace it, and click on available
@@ -84,9 +82,13 @@ window.onload = function() {
 		getLevel.responseType = "text";
 
 		// generate a random level number
-		var levelnum = Math.floor(Math.random() * LEVELS_COUNT);
-		var padded = "000" + levelnum;
-		padded = padded.substr(padded.length - 4);
+		if (typeof LEVELS_COUNT === 'undefined' || !LEVELS_COUNT) {
+			var padded = "none";
+		} else {
+			var levelnum = Math.floor(Math.random() * LEVELS_COUNT);
+			var padded = "000" + levelnum;
+			padded = padded.substr(padded.length - 4);
+		}
 
 		getLevel.open("get", "levels/" + padded + ".txt", true);
 		getLevel.send();

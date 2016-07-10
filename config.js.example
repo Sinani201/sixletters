@@ -1,1 +1,2 @@
 var WEBSOCKET_SERVER = "wss://example.com/ws";
+var LEVELS_COUNT = 1069;
