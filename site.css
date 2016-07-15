@@ -35,6 +35,11 @@ body {
 	font-size: x-large;
 }
 
+#score-display {
+	margin-left: 0.5em;
+	font-size: large;
+}
+
 @media screen and (max-width: 650px) {
 	.word-group {
 		display: inline;

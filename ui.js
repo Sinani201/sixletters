@@ -229,6 +229,11 @@ var UI = (function () {
 		}
 	}
 
+	m.setScore = function (score) {
+		var span_score = document.getElementById("score");
+		span_score.textContent = score;
+	}
+
 	/**
 	 * Adds a message to the multiplayer log.
 	 *

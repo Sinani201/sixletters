@@ -1,6 +1,13 @@
 var GAMESTATE = (function() {
 	var m = {};
 
+	var pointvalues = {
+		3: 90,
+		4: 160,
+		5: 250,
+		6: 360
+	};
+
 	/**
 	 * Shuffles an array in-place and returns it.
 	 * @param array Array the array to shuffle
@@ -75,6 +82,23 @@ var GAMESTATE = (function() {
 	 */
 	var input_box;
 
+	/** Will become true if the player gives up in single-player mode. */
+	var gaveup;
+
+	/**
+	 * While in single player, holds the player's score.  Should not be
+	 * modified directly-- instead, use the addScore method.
+	 */
+	var score;
+
+	function addScore(s) {
+		score += s;
+		UI.setScore(score);
+	}
+
+	/** While in multiplayer mode, maps player names to scores */
+	var mp_scores = {};
+
 	m.shuffleLetters = function () {
 		shuffle(avail_letters);
 		UI.initChoices(avail_letters);
@@ -92,12 +116,12 @@ var GAMESTATE = (function() {
 		var possibilities = dictionary.filter(function(s) { return s.length === 6});
 		var baseWord = possibilities[
 				Math.floor(Math.random() * possibilities.length)]
-				.toLowerCase().split("");
+				.split("");
 
 		var gamewords = [];
 		for (var i = 3; i <= 6; i++) {
 			var ss = getUniqPermutations(baseWord, i).map(function(a) {
-				return a.join(""); }).filter( function(s) {
+				return a.join(""); }).filter(function(s) {
 					return dictionary.indexOf(s) > -1
 				}).sort();
 
@@ -114,6 +138,9 @@ var GAMESTATE = (function() {
 		m.shuffleLetters();
 
 		input_box = [];
+
+		score = 0;
+		gaveup = false;
 	}
 
 	/**
@@ -152,6 +179,10 @@ var GAMESTATE = (function() {
 			} else {
 				UI.revealWord(word, a[0], a[1], playername);
 				answers[a[0]][a[1]][1] = playername;
+
+				if (!gaveup) {
+					addScore(pointvalues[word.length]);
+				}
 			}
 		}
 	}
@@ -219,6 +250,7 @@ var GAMESTATE = (function() {
 			UI.show_mp_menu(-1);
 
 			revealAll();
+			gaveup = true;
 		} else {
 			MULTIPLAYER.voteGiveUp(on);
 			UI.onGiveUpVote(on, playername);
