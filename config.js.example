@@ -1,2 +1,8 @@
-var WEBSOCKET_SERVER = "wss://example.com/ws";
-var LEVELS_COUNT = 1069;
+// The websocket server to use for multiplayer.  Leave blank or commented to
+// disable multiplayer.
+//var WEBSOCKET_SERVER = "wss://example.com/ws";
+
+// The amount of levels in the pre-cached levels folder.  Set as 0 or comment
+// out to disable this feature and download words.txt every time.  See README
+// for more details.
+//var LEVELS_COUNT = 1202;
