@@ -230,6 +230,34 @@ var UI = (function () {
 	}
 
 	/**
+	 * Sets the main score for this game.
+	 *
+	 * @param score Number The new score to set.
+	 */
+	m.setScore = function (score) {
+		var span_score = document.getElementById("score");
+		span_score.textContent = score;
+	}
+
+	/**
+	 * Sets the score for a particular player in the multiplayer display.
+	 *
+	 * @param score Number this player's score.
+	 * @param playername String the player whose score to modify.
+	 */
+	m.setPlayerScore = function (score, playername) {
+		for (var i = 0; i < players.length; i++) {
+			if (players[i][0] === playername) {
+				var ul_playerul = document.getElementById("playerul");
+				li_player = ul_playerul.children[i];
+				span_pscore = li_player.getElementsByClassName("playerscore")[0];
+				span_pscore.textContent = score;
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Adds a message to the multiplayer log.
 	 *
 	 * @param element Element The element to add.
@@ -461,6 +489,16 @@ var UI = (function () {
 			var li = document.createElement("li");
 			li.appendChild(playerNameSpan(newplayer));
 
+			// This player's score, in parentheses
+			li.appendChild(document.createTextNode(" ("));
+
+			var span_playerscore = document.createElement("span");
+			span_playerscore.className = "playerscore";
+			span_playerscore.appendChild(document.createTextNode("0"));
+			li.appendChild(span_playerscore);
+
+			li.appendChild(document.createTextNode(")"));
+
 			var ul_playerul = document.getElementById("playerul");
 			ul_playerul.appendChild(li);
 		}
@@ -512,6 +550,7 @@ var UI = (function () {
 	m.onGiveUpVote = function (on, playername) {
 		for (var i = 0; i < players.length; i++) {
 			if (players[i][0] === playername) {
+				var ul_playerul = document.getElementById("playerul");
 				if (on) {
 					playerul.children[i].classList.add("gaveup");
 				} else {

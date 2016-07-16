@@ -1,6 +1,13 @@
 var GAMESTATE = (function() {
 	var m = {};
 
+	var pointvalues = {
+		3: 90,
+		4: 160,
+		5: 250,
+		6: 360
+	};
+
 	/**
 	 * Shuffles an array in-place and returns it.
 	 * @param array Array the array to shuffle
@@ -75,6 +82,39 @@ var GAMESTATE = (function() {
 	 */
 	var input_box;
 
+	/** Will become true if the player gives up in single-player mode. */
+	var gaveup;
+
+	/**
+	 * Holds the total score of all players.  This variable should not be
+	 * modified directly-- use the addScore function instead.
+	 */
+	var score = 0;
+
+	/** Adds points to the grand point total, and updates the UI with it. */
+	function addScore(points) {
+		score += points;
+		UI.setScore(score);
+	}
+
+	/**
+	 * While in multiplayer mode, maps player names to scores.  This variable
+	 * should not be modified directly-- use the addPlayerScore function
+	 * instead.
+	 */
+	var mp_scores = {};
+
+	/** Adds points to a MP player's score, and updates the UI with it. */
+	function addPlayerScore(points, playername) {
+		if (mp_scores[playername]) {
+			mp_scores[playername] += points;
+		} else {
+			mp_scores[playername] = points;
+		}
+
+		UI.setPlayerScore(mp_scores[playername], playername);
+	}
+
 	m.shuffleLetters = function () {
 		shuffle(avail_letters);
 		UI.initChoices(avail_letters);
@@ -92,12 +132,12 @@ var GAMESTATE = (function() {
 		var possibilities = dictionary.filter(function(s) { return s.length === 6});
 		var baseWord = possibilities[
 				Math.floor(Math.random() * possibilities.length)]
-				.toLowerCase().split("");
+				.split("");
 
 		var gamewords = [];
 		for (var i = 3; i <= 6; i++) {
 			var ss = getUniqPermutations(baseWord, i).map(function(a) {
-				return a.join(""); }).filter( function(s) {
+				return a.join(""); }).filter(function(s) {
 					return dictionary.indexOf(s) > -1
 				}).sort();
 
@@ -114,6 +154,8 @@ var GAMESTATE = (function() {
 		m.shuffleLetters();
 
 		input_box = [];
+
+		gaveup = false;
 	}
 
 	/**
@@ -152,6 +194,14 @@ var GAMESTATE = (function() {
 			} else {
 				UI.revealWord(word, a[0], a[1], playername);
 				answers[a[0]][a[1]][1] = playername;
+
+				if (!gaveup) {
+					addScore(pointvalues[word.length]);
+
+					if (playername !== true) {
+						addPlayerScore(pointvalues[word.length], playername);
+					}
+				}
 			}
 		}
 	}
@@ -219,6 +269,7 @@ var GAMESTATE = (function() {
 			UI.show_mp_menu(-1);
 
 			revealAll();
+			gaveup = true;
 		} else {
 			MULTIPLAYER.voteGiveUp(on);
 			UI.onGiveUpVote(on, playername);
@@ -278,7 +329,14 @@ var GAMESTATE = (function() {
 			},
 			onNameTaken: UI.onNameTaken,
 			onPlayerQuit: UI.onPlayerQuit,
-			onPlayerJoin: UI.onPlayerJoin,
+			onPlayerJoin: function (name) {
+				UI.onPlayerJoin(name);
+				if (name === MULTIPLAYER.getPlayername()) {
+					console.log("actual player " + name);
+					mp_scores[name] = score;
+					UI.setPlayerScore(score, name);
+				}
+			},
 			onWordAttempt: m.onWordGuess,
 			makeGame: function (gamewords) {
 				m.createGame(gamewords);
