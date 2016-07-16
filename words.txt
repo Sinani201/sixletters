@@ -1676,7 +1676,6 @@ cashew
 casing
 casino
 cask
-casked
 casket
 casks
 cast
@@ -1737,7 +1736,6 @@ cede
 ceded
 cedes
 ceding
-cel
 celery
 cell
 cellar
@@ -1745,7 +1743,6 @@ celled
 cello
 cellos
 cells
-cels
 cement
 censer
 censor
@@ -2097,12 +2094,10 @@ coffer
 coffin
 cog
 cogent
-cogged
 cogs
 cohere
 cohort
 coif
-coifed
 coil
 coiled
 coils
@@ -2110,8 +2105,6 @@ coin
 coined
 coiner
 coins
-coir
-coirs
 coital
 coitus
 cola
@@ -2470,7 +2463,6 @@ curb
 curbed
 curbs
 curd
-curded
 curdle
 cure
 cured
@@ -2499,7 +2491,6 @@ curved
 curves
 curvy
 cusp
-cusped
 cuspid
 cusps
 cuss
@@ -2510,7 +2501,6 @@ cut
 cute
 cutely
 cuter
-cutes
 cutest
 cutlet
 cutout
@@ -2612,13 +2602,10 @@ daunt
 daunts
 davit
 davits
-daw
 dawdle
-dawed
 dawn
 dawned
 dawns
-daws
 day
 daybed
 days
@@ -2796,7 +2783,6 @@ detest
 detour
 detox
 deuce
-deuced
 deuces
 device
 devil
@@ -2850,9 +2836,6 @@ dikes
 dilate
 dildo
 dildos
-dill
-dilled
-dills
 dilute
 dim
 dime
@@ -3188,7 +3171,6 @@ duffs
 dug
 dugout
 duke
-duked
 dukes
 dulcet
 dull
