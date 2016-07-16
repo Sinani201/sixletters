@@ -113,6 +113,9 @@ var MULTIPLAYER = (function() {
 		}
 	}
 
+	function onServerClose(event) {
+	}
+
 	/**
 	 * Announce to the server that the player has guessed a word.
 	 *
@@ -184,6 +187,7 @@ var MULTIPLAYER = (function() {
 			callbacks.onLobbyCreate(event.data);
 			onPlayerJoin(name);
 			sock.onmessage = onServerMsg;
+			sock.onclose = onServerClose;
 		};
 	}
 
@@ -214,6 +218,8 @@ var MULTIPLAYER = (function() {
 		sock.onopen = function (event) {
 			sock.send(":join "+lobbyname);
 		};
+
+		sock.onclose = callbacks.noLobbyError;
 
 		sock.onmessage = function (event) {
 			if (state === 0) {
