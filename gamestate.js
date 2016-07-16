@@ -86,18 +86,34 @@ var GAMESTATE = (function() {
 	var gaveup;
 
 	/**
-	 * While in single player, holds the player's score.  Should not be
-	 * modified directly-- instead, use the addScore method.
+	 * Holds the total score of all players.  This variable should not be
+	 * modified directly-- use the addScore function instead.
 	 */
-	var score;
+	var score = 0;
 
-	function addScore(s) {
-		score += s;
+	/** Adds points to the grand point total, and updates the UI with it. */
+	function addScore(points) {
+		score += points;
 		UI.setScore(score);
 	}
 
-	/** While in multiplayer mode, maps player names to scores */
+	/**
+	 * While in multiplayer mode, maps player names to scores.  This variable
+	 * should not be modified directly-- use the addPlayerScore function
+	 * instead.
+	 */
 	var mp_scores = {};
+
+	/** Adds points to a MP player's score, and updates the UI with it. */
+	function addPlayerScore(points, playername) {
+		if (mp_scores[playername]) {
+			mp_scores[playername] += points;
+		} else {
+			mp_scores[playername] = points;
+		}
+
+		UI.setPlayerScore(mp_scores[playername], playername);
+	}
 
 	m.shuffleLetters = function () {
 		shuffle(avail_letters);
@@ -139,7 +155,6 @@ var GAMESTATE = (function() {
 
 		input_box = [];
 
-		score = 0;
 		gaveup = false;
 	}
 
@@ -182,6 +197,10 @@ var GAMESTATE = (function() {
 
 				if (!gaveup) {
 					addScore(pointvalues[word.length]);
+
+					if (playername !== true) {
+						addPlayerScore(pointvalues[word.length], playername);
+					}
 				}
 			}
 		}
@@ -310,7 +329,14 @@ var GAMESTATE = (function() {
 			},
 			onNameTaken: UI.onNameTaken,
 			onPlayerQuit: UI.onPlayerQuit,
-			onPlayerJoin: UI.onPlayerJoin,
+			onPlayerJoin: function (name) {
+				UI.onPlayerJoin(name);
+				if (name === MULTIPLAYER.getPlayername()) {
+					console.log("actual player " + name);
+					mp_scores[name] = score;
+					UI.setPlayerScore(score, name);
+				}
+			},
 			onWordAttempt: m.onWordGuess,
 			makeGame: function (gamewords) {
 				m.createGame(gamewords);

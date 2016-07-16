@@ -154,7 +154,6 @@ var MULTIPLAYER = (function() {
 	 * @param cbacks Object An object with multiplayer callback functions.
 	 */
 	m.hostGame = function (name, answers, cbacks) {
-		console.log(answers);
 		sock = new WebSocket(WEBSOCKET_SERVER);
 		playername = name;
 		callbacks = cbacks;
