@@ -184,7 +184,8 @@ var GAMESTATE = (function() {
 	 * @param word String The word that was guessed.
 	 * @param playername String The player that guessed this word, or true if
 	 *                          it was guessed by the local player, not in a
-	 *                          multiplayer round.
+	 *                          multiplayer round.  Will be 1 if this word was
+	 *                          given up on.
 	 */
 	m.onWordGuess = function (word, playername) {
 		var a = checkWord(word);
@@ -196,10 +197,12 @@ var GAMESTATE = (function() {
 				answers[a[0]][a[1]][1] = playername;
 
 				if (!gaveup) {
-					addScore(pointvalues[word.length]);
+					if (playername !== 1) {
+						addScore(pointvalues[word.length]);
 
-					if (playername !== true) {
-						addPlayerScore(pointvalues[word.length], playername);
+						if (playername !== true) {
+							addPlayerScore(pointvalues[word.length], playername);
+						}
 					}
 				}
 			}
