@@ -21,14 +21,14 @@ args = parser.parse_args()
 MIN_WORDS = args.min_words
 DIR_NAME = args.levelsdir
 
-f = args.wordsfile
-words = [l.rstrip().lower() for l in f]
-f.close()
-
 badwords = set()
 if args.badwords:
     badwords = set(w.rstrip().lower() for w in args.badwords
-                   if 3 <= len(w.rstrip()) <= 6 and w.rstrip() in words)
+                   if 3 <= len(w.rstrip()) <= 6)
+
+f = args.wordsfile
+words = [l.rstrip().lower() for l in f if l.rstrip().lower() not in badwords]
+f.close()
 
 counter = 0
 
@@ -40,8 +40,6 @@ for lw in words:
         level_count = 0
         level_words = ''
         for w in words:
-            if w in badwords:
-                continue
             lw_c = Counter(lw)
             w_c = Counter(w)
             valid_anagram = True
