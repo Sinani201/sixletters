@@ -7,7 +7,6 @@ var UI = (function () {
 	 *                   Should be broken up by word length.
 	 */
 	m.constructGame = function (game) {
-		console.log(game);
 		// first decide how the columns will be divied up
 		var max_rows = 20;
 		var word_amounts = game.map(function(a) { return [a.length, 0] });
@@ -584,6 +583,11 @@ var UI = (function () {
 		m.show_mp_menu(-1);
 	}
 
+	m.onDisconnect = function () {
+		m.show_mp_menu(3);
+	}
+		
+
 	/**
 	 * Show a certain stage of multiplayer menu.
 	 *
@@ -598,7 +602,8 @@ var UI = (function () {
 		var stages = [
 			document.getElementById("sharebutton"),
 			document.getElementById("entername"),
-			document.getElementById("gameinfo")
+			document.getElementById("gameinfo"),
+			document.getElementById("connection-lost")
 		];
 		for (var i = 0; i < stages.length; i++) {
 			if (i === n) {

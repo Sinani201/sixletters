@@ -34,6 +34,9 @@
  * noLobbyError()
  * Only necessary for joining an already existing game.  This function will be
  * called if the user has joined a game that does not exist.
+ *
+ * onDisconnect()
+ * Will be called if the server ever loses connection.
  */
 var MULTIPLAYER = (function() {
 	var m = {};
@@ -50,6 +53,7 @@ var MULTIPLAYER = (function() {
 
 	var sock;
 	var playername = null;
+	var lobby = null;
 	var callbacks;
 
 	// the list of players in this game
@@ -88,7 +92,6 @@ var MULTIPLAYER = (function() {
 	}
 
 	function onServerMsg(event) {
-		console.log(">"+event.data);
 		var attempt_command = ":attempt ";
 		if (event.data.substring(0, attempt_command.length) === attempt_command) {
 			sdata = split(event.data, " ", 2);
@@ -114,6 +117,8 @@ var MULTIPLAYER = (function() {
 	}
 
 	function onServerClose(event) {
+		console.log("socket closed");
+		callbacks.onDisconnect();
 	}
 
 	/**
@@ -253,8 +258,8 @@ var MULTIPLAYER = (function() {
 				if (sdata[0] === ":word") {
 					sent_words.push(sdata[1]);
 				} else if (sdata[0] === ":endwords") {
-					console.log(sent_words);
 					callbacks.makeGame(sent_words);
+					lobby = lobbyname;
 					sock.onmessage = onServerMsg;
 				}
 			}

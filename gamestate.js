@@ -335,7 +335,6 @@ var GAMESTATE = (function() {
 			onPlayerJoin: function (name) {
 				UI.onPlayerJoin(name);
 				if (name === MULTIPLAYER.getPlayername()) {
-					console.log("actual player " + name);
 					mp_scores[name] = score;
 					UI.setPlayerScore(score, name);
 				}
@@ -348,7 +347,8 @@ var GAMESTATE = (function() {
 			},
 			onGiveUpVote: UI.onGiveUpVote,
 			onAllGiveUp: revealAll,
-			noLobbyError: UI.noLobbyError
+			noLobbyError: UI.noLobbyError,
+			onDisconnect: UI.onDisconnect
 		};
 	}
 
