@@ -127,7 +127,7 @@ var MULTIPLAYER = (function() {
 	 * @param word String The word that was guessed.  Not case sensitive.
 	 */
 	m.announceWordGuess = function (word) {
-		if (sock) {
+		if (sock && word) {
 			sock.send(":attempt "+word.toLowerCase());
 		}
 	}
