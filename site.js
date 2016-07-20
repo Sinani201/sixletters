@@ -7,12 +7,16 @@ function setupMouseInput() {
 	// If the user clicks on the last slot with a letter, backsapce it.
 	var div_letter_slots_c = document.getElementById("letter-slots").children;
 	for (var i = 0; i < div_letter_slots_c.length; i++) {
-		div_letter_slots_c[i].onclick = function() {
-			var sib = this.nextElementSibling;
-			if (!(sib && sib.childNodes.length)) {
-				GAMESTATE.backspaceChar();
-			}
-		}
+		(function(a) {
+			var slotclick = function() {
+				var sib = div_letter_slots_c[a+1];
+				if (!(sib && sib.childNodes.length)) {
+					GAMESTATE.backspaceChar(a);
+				}
+			};
+			div_letter_slots_c[a].onclick = slotclick;
+			div_letter_slots_c[a].ontouchstart = slotclick;
+		})(i);
 	}
 
 	// Click on an available letter to input it.
@@ -21,9 +25,11 @@ function setupMouseInput() {
 		// Has to go in a function closure so the i variable keeps its value for
 		// each individual div.
 		(function(a) {
-			div_letters_c[i].onclick = function() {
+			var letterclick = function() {
 				GAMESTATE.enterChar(a);
 			};
+			div_letters_c[a].onclick = letterclick;
+			div_letters_c[a].ontouchstart = letterclick;
 		})(i);
 	}
 }

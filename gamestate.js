@@ -213,10 +213,13 @@ var GAMESTATE = (function() {
 	 * Pops the last element of the `input_box` array, and transfers it to the
 	 * last available empty slot in `avail_letters`.
 	 *
+	 * @param index int Optional: the index to backspace
 	 * @return Boolean False if there was nothing to backspace, otherwise true.
 	 */
-	m.backspaceChar = function () {
-		if (input_box.length > 0) {
+	m.backspaceChar = function (index) {
+		if (input_box.length > 0
+				&& (typeof index === "undefined"
+					|| input_box.length === index + 1)) {
 			var c = input_box.pop();
 			UI.backspaceChar();
 
