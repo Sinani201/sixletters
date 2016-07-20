@@ -3,6 +3,6 @@
 //var WEBSOCKET_SERVER = "wss://example.com/ws";
 
 // The amount of levels in the pre-cached levels folder.  Set as 0 or comment
-// out to disable this feature and download words.txt every time.  See README
-// for more details.
-//var LEVELS_COUNT = 1134;
+// out to disable this feature, causing clients to download words.txt on each
+// page load.  See README for more details.
+//var LEVELS_COUNT = 1206;
