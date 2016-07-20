@@ -11,7 +11,7 @@ parser.add_argument('-w', '--wordsfile', default='words.txt', type=open,
 parser.add_argument('-l', '--levelsdir', default='levels',
                     help=('The directory to store the levels in. Will be created'
                           ' if it does not exist already.'))
-parser.add_argument('-c', '--min-words', default=23, type=int,
+parser.add_argument('-c', '--min-words', default=20, type=int,
                     help='The minimum amount of words a level can have.')
 parser.add_argument('-b', '--badwords', type=open,
                     help='A list of bad words to exclude from all levels')

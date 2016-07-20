@@ -42,7 +42,7 @@ fn main() {
     // defaults
     let mut wordsfile = String::from("words.txt");
     let mut levelsdir = String::from("levels");
-    let mut min_words = 23;
+    let mut min_words = 20;
     let mut badwordsfile = String::from("");
     let mut dryrun = false;
 
@@ -60,7 +60,7 @@ Pre-caches every SixLetters level.
 optional arguments:
   -h, --help            show this help message and exit
   -w WORDSFILE, --wordsfile WORDSFILE
-                        The file with words to use (default: 23)
+                        The file with words to use (default: 20)
   -l LEVELSDIR, --levelsdir LEVELSDIR
                         The directory to store the levels in. Will be created
                         if it does not exist already. (default: levels/)
@@ -163,5 +163,6 @@ optional arguments:
         }
     }
 
+    println!("// Put this in your config.js file:");
     println!("var LEVELS_COUNT={};", level_counter);
 }
