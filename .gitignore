@@ -1,3 +1,4 @@
 /dist/levels
 /dist/config.js
-/levelgen
+levelgen
+levelgen_multithread
