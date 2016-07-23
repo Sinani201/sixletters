@@ -6,9 +6,9 @@ import os
 parser = argparse.ArgumentParser(
     description='Pre-caches every SixLetters level.',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('-w', '--wordsfile', default='words.txt', type=open,
+parser.add_argument('-w', '--wordsfile', default='dist/words.txt', type=open,
                     help='The file with words to use')
-parser.add_argument('-l', '--levelsdir', default='levels',
+parser.add_argument('-l', '--levelsdir', default='dist/levels',
                     help=('The directory to store the levels in. Will be created'
                           ' if it does not exist already.'))
 parser.add_argument('-c', '--min-words', default=20, type=int,

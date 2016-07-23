@@ -40,8 +40,8 @@ fn main() {
     let mut last_arg = String::from("");
 
     // defaults
-    let mut wordsfile = String::from("words.txt");
-    let mut levelsdir = String::from("levels");
+    let mut wordsfile = String::from("dist/words.txt");
+    let mut levelsdir = String::from("dist/levels");
     let mut min_words = 20;
     let mut badwordsfile = String::from("");
     let mut dryrun = false;
@@ -60,13 +60,13 @@ Pre-caches every SixLetters level.
 optional arguments:
   -h, --help            show this help message and exit
   -w WORDSFILE, --wordsfile WORDSFILE
-                        The file with words to use (default: 20)
+                        The file with words to use (default: dist/words.txt)
   -l LEVELSDIR, --levelsdir LEVELSDIR
                         The directory to store the levels in. Will be created
-                        if it does not exist already. (default: levels/)
+                        if it does not exist already. (default: dist/levels)
   -c MIN_WORDS, --min-words MIN_WORDS
                         The minimum amount of words a level can have.
-                        (default: 23)
+                        (default: 20)
   -b BADWORDS, --badwords BADWORDS
                         A list of bad words to exclude from all levels
                         (default: None)
