@@ -33,7 +33,7 @@ fn is_subgram(small: &String, big: &String) -> bool {
         }
         big_on = match big_iter.next() {
             Some(x) => x,
-            None => ('z' as u8) + 1,
+            None => return false,
         };
     }
 }
