@@ -9,8 +9,8 @@ link](https://www.ocf.berkeley.edu/~dkessler/sixletters/)) ([backup link
 By default, clients must download the entire word list on each page load to 
 generate a level. This process is slow and consumes excessive bandwidth. As an 
 alternative, you can run `python levelgens/levelgen.py` to pre-cache every 
-possible level. This script creates a `levels` directory and generates 1742 
-levels which consume 6.9M of disk space. The script takes ~30 seconds when run 
+possible level. This script creates a `levels` directory and generates 1834
+levels which consume 7.2M of disk space. The script takes ~30 seconds when run 
 with PyPy or 3-4 minutes when run with CPython on a modern computer.
 
 If this is too slow, you can use the alternate Rust version, which runs in less 
