@@ -28,5 +28,5 @@ Both the Python and Rust versions take the same options.
 ## Multiplayer
 You can play SixLetters cooperatively with your friends! Press the "Play Co-op" 
 button to generate a link that you can send to anyone. The server is written in 
-Rust and its [source](https://github.com/dkess/rust_slserver) is on GitHub. 
+Go and its [source](https://github.com/dkess/go_slserver) is on GitHub. 
 Competitive multiplayer is coming soon!
