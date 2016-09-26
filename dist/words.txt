@@ -686,6 +686,7 @@ bards
 bare
 bared
 barely
+barer
 bares
 barf
 barfed
@@ -703,6 +704,7 @@ barn
 barns
 baron
 barons
+barre
 barred
 barrel
 barren
@@ -4612,6 +4614,7 @@ girds
 girl
 girls
 girth
+girths
 gist
 git
 gits
@@ -7769,6 +7772,7 @@ racism
 rack
 racks
 racy
+rad
 radial
 radii
 radio
@@ -7890,6 +7894,7 @@ rear
 reared
 rearm
 rears
+rebar
 rebel
 rebels
 reborn
@@ -8350,6 +8355,7 @@ salami
 salary
 sale
 sales
+saline
 saliva
 sallow
 sally
