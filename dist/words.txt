@@ -10394,6 +10394,8 @@ tiers
 ties
 tiff
 tiffs
+tiger
+tigers
 tight
 tights
 tilde
