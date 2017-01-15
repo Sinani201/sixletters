@@ -5,4 +5,4 @@
 // The amount of levels in the pre-cached levels folder.  Set as 0 or comment
 // out to disable this feature, causing clients to download words.txt on each
 // page load.  See README for more details.
-//var LEVELS_COUNT = 1989;
+//var LEVELS_COUNT = 2096;
