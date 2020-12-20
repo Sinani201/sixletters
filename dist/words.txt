@@ -6402,6 +6402,7 @@ liquid
 liquor
 lisle
 lisp
+lisped
 lisps
 list
 listed
