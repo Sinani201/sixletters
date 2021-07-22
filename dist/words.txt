@@ -6659,6 +6659,7 @@ madly
 mafia
 mafias
 mag
+mage
 maggot
 magic
 magics
@@ -6842,6 +6843,7 @@ meek
 meekly
 meet
 meets
+mega
 meld
 melded
 melds
@@ -8856,6 +8858,7 @@ ravine
 raving
 ravish
 raw
+rawr
 ray
 rayon
 rays
@@ -11843,6 +11846,7 @@ typos
 tyrant
 udder
 udders
+udon
 uglier
 ugly
 ulcer
