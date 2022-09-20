@@ -11677,6 +11677,7 @@ trice
 trick
 tricks
 tricky
+trie
 tried
 tries
 trifle
