@@ -7661,6 +7661,9 @@ orb
 orbit
 orbits
 orbs
+orc
+orca
+orcas
 orchid
 ordain
 ordeal
@@ -11157,6 +11160,7 @@ tanks
 tanned
 tanner
 tans
+tao
 tap
 tape
 taped
